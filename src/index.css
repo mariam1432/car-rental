@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #CAB767;
+    --color-primary-gradient: rgba(227, 194, 45, 1);
+}
+
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+
+}
+
+.clip-diagonal {
+    clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+}
+
+@media (max-width: 767px) {
+    .clip-diagonal {
+        clip-path: none;
+    }
+}
+
+.zigzag-underline {
+    display: inline;
+    background-image:
+        repeating-linear-gradient(-45deg,
+            transparent 0,
+            transparent 3px,
+            #000 3px,
+            #000 6px),
+        repeating-linear-gradient(45deg,
+            transparent 0,
+            transparent 3px,
+            #000 3px,
+            #000 6px);
+    background-size: 100% 6px;
+    background-repeat: no-repeat;
+    background-position: 0 100%, 0 calc(100% + 4px);
+    padding-bottom: 8px;
+}
+
+.zig-zag-line {
+    --a: 90deg;
+    /* control the angle */
+    --s: 20px;
+    /* size of the zig-zag */
+    --b: 2px;
+    /* control the thickness */
+
+    background: #180600;
+    height: calc(var(--b) + var(--s)/(2*tan(var(--a)/2)));
+    width: 100%;
+    --_g: var(--s) repeat-x conic-gradient(from calc(var(--a)/-2) at bottom,
+            #0000, #000 1deg calc(var(--a) - 1deg), #0000 var(--a));
+    mask: 50% calc(-1*var(--b))/var(--_g) exclude, 50%/var(--_g);
+}
