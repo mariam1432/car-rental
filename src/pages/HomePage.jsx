@@ -1,9 +1,15 @@
 import React from "react";
 import { Button, CarBrandCard, CarCard, Layout } from "../components";
+import { useBrandsQuery } from "../services/brandApi";
+import { URL } from "../data";
+
 import { useNavigate } from "react-router-dom";
 const HomePage = () => {
-  const list = [...Array(11)];
+  const { data: brandsData } = useBrandsQuery({ populate: "logo" });
+
+  const brandList = brandsData?.data ? brandsData?.data : [];
   const carList = [...Array(4)];
+  const list = [];
   const navigate = useNavigate();
   return (
     <Layout isHome>
@@ -29,7 +35,7 @@ const HomePage = () => {
           <div className="w-full">
             {/* Mobile: 2-column grid */}
             <div className="grid grid-cols-2 gap-2 w-full md:hidden">
-              {list.map((l, index) => (
+              {brandList.map((brand, index) => (
                 <div
                   key={index}
                   className={
@@ -39,8 +45,8 @@ const HomePage = () => {
                   }
                 >
                   <CarBrandCard
-                    title="FORD"
-                    imgUrl="https://www.logo.wine/a/logo/Ford_of_Britain/Ford_of_Britain-Logo.wine.svg"
+                    title={brand.car_Brand}
+                    imgUrl={URL + brand?.logo?.url}
                   />
                 </div>
               ))}
@@ -49,12 +55,12 @@ const HomePage = () => {
             {/* Desktop: Horizontal scroll container */}
             <div className="hidden md:block w-full overflow-x-auto no-scrollbar py-2">
               <div className="inline-flex space-x-4 min-w-max w-full">
-                {list.map((l, index) => (
+                {brandList.map((brand, index) => (
                   <CarBrandCard
                     key={index}
                     className="flex-shrink-0"
-                    title="FORD"
-                    imgUrl="https://www.logo.wine/a/logo/Ford_of_Britain/Ford_of_Britain-Logo.wine.svg"
+                    title={brand.car_Brand}
+                    imgUrl={URL + brand?.logo?.url}
                   />
                 ))}
               </div>

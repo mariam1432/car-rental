@@ -11,7 +11,7 @@ import porsche from "./assets/porsche.webp";
 import rover from "./assets/rover.png";
 import mini from "./assets/mini.png";
 import bently from "./assets/bentley.png";
-import { Accordion } from "./components";
+export const URL = "http://localhost:1337";
 export const carBrandList = [
   { id: 1, logo: AstonMartin, title: "Aston Martin" },
   { id: 2, logo: cadillac, title: "Cadillac" },

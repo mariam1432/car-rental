@@ -1,31 +1,8 @@
 import React, { useState } from "react";
-import sedansvg from "../assets/sedansvg.webp";
-import sportcarsvg from "../assets/sportcarsvg.webp";
-import supercarsvg from "../assets/supercarsvg.webp";
-import suvsvg from "../assets/suvsvg.webp";
+
+import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useNavigate } from "react-router-dom";
-const carType = [
-  {
-    id: 1,
-    img: sedansvg,
-    title: "Luxury Cars",
-    path: "cartype/luxury-rental-car",
-  },
-  {
-    id: 2,
-    img: sportcarsvg,
-    title: "Sports Cars",
-    path: "cartype/sports-car-rentals",
-  },
-  { id: 3, img: suvsvg, title: "SUV's", path: "cartype/suv" },
-  { id: 4, img: supercarsvg, title: "Exotic Cars", path: "cartype/exotic" },
-  {
-    id: 5,
-    img: supercarsvg,
-    title: "Economy Cars",
-    path: "cartype/economic-cars-rentals",
-  },
-];
+import { URL } from "../data";
 const searchResults = [
   {
     id: 1,
@@ -71,7 +48,8 @@ const SearchResultItem = ({ imgUrl, index, title, description }) => {
 const SearchbarWithCategories = () => {
   const [search, setSearch] = useState(false);
   const navigate = useNavigate();
-
+  const { data } = useCategoriesQuery({ populate: "image" });
+  const carType = data?.data ? data?.data : [];
   return (
     <div className="md:mx-auto  bg-[#000000e0] bg-opacity-10 flex flex-col items-center rounded-xl py-8 px-10 gap-6 w-full md:w-[70%]">
       <h1 className="text-xl md:text-3xl text-white font-bold text-center">
@@ -107,9 +85,9 @@ const SearchbarWithCategories = () => {
 
       {/* Car Grid */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 w-full">
-        {carType.map((c, index) => (
+        {carType.map((type, index) => (
           <div
-            key={c.id}
+            key={carType.slug}
             className={`border border-primary rounded-lg flex flex-col items-center 
               ${
                 index === carType.length - 1
@@ -119,11 +97,13 @@ const SearchbarWithCategories = () => {
             `}
           >
             <img
-              src={c.img}
-              alt={c.title}
+              src={URL + type?.image?.url}
+              alt={type.cartype}
               className="w-10 h-10 object-contain mb-1"
             />
-            <span className="text-white text-sm text-center">{c.title}</span>
+            <span className="text-white text-sm text-center">
+              {type.cartype}
+            </span>
           </div>
         ))}
       </div>

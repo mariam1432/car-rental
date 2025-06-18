@@ -1,8 +1,13 @@
 import { useState, useMemo } from "react";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
+import { useCategoriesQuery } from "../services/carCategoryApi";
+import { useBrandsQuery } from "../services/brandApi";
 const Navbar = ({ isHomePage }) => {
   const navigate = useNavigate();
+  const { data } = useCategoriesQuery({ populate: "*" });
+  const { data: brandsData } = useBrandsQuery({});
+
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openSubDropdown, setOpenSubDropdown] = useState(null);
@@ -21,308 +26,8 @@ const Navbar = ({ isHomePage }) => {
     setOpenSubDropdown(null);
   };
 
-  // Helper function to generate consistent slugs/URLs
-  const generateSlug = (str) => str.toLowerCase().replace(/\s+/g, "-");
-
-  // Optimized data structure with href values
-  const CAR_TYPES = useMemo(
-    () => [
-      {
-        name: "Luxury Cars",
-        href: `/cartype/${generateSlug("Luxury Cars")}-rentals`,
-        categories: [
-          {
-            name: "High End",
-            href: `/product-category/${generateSlug("Luxury")}/${generateSlug(
-              "Luxury High End"
-            )}/`,
-            models: [
-              { name: "Ferrari", href: `/product/${generateSlug("Ferrari")}/` },
-              {
-                name: "Lamborghini",
-                href: `/product/${generateSlug("Lamborghini")}/`,
-              },
-              {
-                name: "Rolls Royce",
-                href: `/product/${generateSlug("Rolls Royce")}/`,
-              },
-            ],
-          },
-          {
-            name: "Mid Range",
-            href: `/product-category/${generateSlug("Luxury")}/${generateSlug(
-              "Luxury Mid Range"
-            )}/`,
-            models: [
-              {
-                name: "Mercedes S-Class",
-                href: `/product/${generateSlug("Mercedes S-Class")}/`,
-              },
-              {
-                name: "BMW 7 Series",
-                href: `/product/${generateSlug("BMW 7 Series")}/`,
-              },
-              { name: "Audi A8", href: `/product/${generateSlug("Audi A8")}/` },
-            ],
-          },
-          {
-            name: "Sports",
-            href: `/product-category/${generateSlug("Luxury")}/${generateSlug(
-              "Luxury Sports"
-            )}/`,
-            models: [
-              {
-                name: "Porsche 911",
-                href: `/product/${generateSlug("Porsche 911")}/`,
-              },
-              {
-                name: "Aston Martin",
-                href: `/product/${generateSlug("Aston Martin")}/`,
-              },
-              {
-                name: "Maserati",
-                href: `/product/${generateSlug("Maserati")}/`,
-              },
-            ],
-          },
-          {
-            name: "SUV",
-            href: `/product-category/${generateSlug("Luxury")}/${generateSlug(
-              "Luxury SUV"
-            )}/`,
-            models: [
-              {
-                name: "Range Rover",
-                href: `/product/${generateSlug("Range Rover")}/`,
-              },
-              {
-                name: "Bentley Bentayga",
-                href: `/product/${generateSlug("Bentley Bentayga")}/`,
-              },
-              {
-                name: "Mercedes G-Class",
-                href: `/product/${generateSlug("Mercedes G-Class")}/`,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Sports Car",
-        href: `/cartype/${generateSlug("Sports Car")}-rentals`,
-        categories: [
-          {
-            name: "Exotic",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "Exotic"
-            )}/`,
-            models: [
-              {
-                name: "Ferrari 488",
-                href: `/product/${generateSlug("Ferrari 488")}/`,
-              },
-              {
-                name: "Lamborghini Huracan",
-                href: `/product/${generateSlug("Lamborghini Huracan")}/`,
-              },
-              {
-                name: "McLaren 720S",
-                href: `/product/${generateSlug("McLaren 720S")}/`,
-              },
-            ],
-          },
-          {
-            name: "Luxury",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "Luxury"
-            )}/`,
-            models: [
-              {
-                name: "Aston Martin DB11",
-                href: `/product/${generateSlug("Aston Martin DB11")}/`,
-              },
-              {
-                name: "Porsche 911 Turbo",
-                href: `/product/${generateSlug("Porsche 911 Turbo")}/`,
-              },
-              {
-                name: "Mercedes AMG GT",
-                href: `/product/${generateSlug("Mercedes AMG GT")}/`,
-              },
-            ],
-          },
-          {
-            name: "SUV",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "SUV"
-            )}/`,
-            models: [
-              {
-                name: "Lamborghini Urus",
-                href: `/product/${generateSlug("Lamborghini Urus")}/`,
-              },
-              {
-                name: "Porsche Cayenne Turbo",
-                href: `/product/${generateSlug("Porsche Cayenne Turbo")}/`,
-              },
-              {
-                name: "Audi RS Q8",
-                href: `/product/${generateSlug("Audi RS Q8")}/`,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "SUV",
-        href: `/cartype/${generateSlug("SUV")}-rentals`,
-        categories: [
-          {
-            name: "Exotic",
-            href: `/product-category/${generateSlug("SUV")}/${generateSlug(
-              "Exotic"
-            )}/`,
-            models: [
-              {
-                name: "Ferrari 488",
-                href: `/product/${generateSlug("Ferrari 488")}/`,
-              },
-              {
-                name: "Lamborghini Huracan",
-                href: `/product/${generateSlug("Lamborghini Huracan")}/`,
-              },
-              {
-                name: "McLaren 720S",
-                href: `/product/${generateSlug("McLaren 720S")}/`,
-              },
-            ],
-          },
-          {
-            name: "Luxury",
-            href: `/product-category/${generateSlug("SUV")}/${generateSlug(
-              "Luxury"
-            )}/`,
-            models: [
-              {
-                name: "Aston Martin DB11",
-                href: `/product/${generateSlug("Aston Martin DB11")}/`,
-              },
-              {
-                name: "Porsche 911 Turbo",
-                href: `/product/${generateSlug("Porsche 911 Turbo")}/`,
-              },
-              {
-                name: "Mercedes AMG GT",
-                href: `/product/${generateSlug("Mercedes AMG GT")}/`,
-              },
-            ],
-          },
-          {
-            name: "SUV",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "SUV"
-            )}/`,
-            models: [
-              {
-                name: "Lamborghini Urus",
-                href: `/product/${generateSlug("Lamborghini Urus")}/`,
-              },
-              {
-                name: "Porsche Cayenne Turbo",
-                href: `/product/${generateSlug("Porsche Cayenne Turbo")}/`,
-              },
-              {
-                name: "Audi RS Q8",
-                href: `/product/${generateSlug("Audi RS Q8")}/`,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "Economic Cars",
-        href: `/cartype/${generateSlug("Economic Cars")}-rentals`,
-        categories: [
-          {
-            name: "Exotic",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "Exotic"
-            )}/`,
-            models: [
-              {
-                name: "Ferrari 488",
-                href: `/product/${generateSlug("Ferrari 488")}/`,
-              },
-              {
-                name: "Lamborghini Huracan",
-                href: `/product/${generateSlug("Lamborghini Huracan")}/`,
-              },
-              {
-                name: "McLaren 720S",
-                href: `/product/${generateSlug("McLaren 720S")}/`,
-              },
-            ],
-          },
-          {
-            name: "Luxury",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "Luxury"
-            )}/`,
-            models: [
-              {
-                name: "Aston Martin DB11",
-                href: `/product/${generateSlug("Aston Martin DB11")}/`,
-              },
-              {
-                name: "Porsche 911 Turbo",
-                href: `/product/${generateSlug("Porsche 911 Turbo")}/`,
-              },
-              {
-                name: "Mercedes AMG GT",
-                href: `/product/${generateSlug("Mercedes AMG GT")}/`,
-              },
-            ],
-          },
-          {
-            name: "SUV",
-            href: `/product-category/${generateSlug("Sports")}/${generateSlug(
-              "SUV"
-            )}/`,
-            models: [
-              {
-                name: "Lamborghini Urus",
-                href: `/product/${generateSlug("Lamborghini Urus")}/`,
-              },
-              {
-                name: "Porsche Cayenne Turbo",
-                href: `/product/${generateSlug("Porsche Cayenne Turbo")}/`,
-              },
-              {
-                name: "Audi RS Q8",
-                href: `/product/${generateSlug("Audi RS Q8")}/`,
-              },
-            ],
-          },
-        ],
-      },
-      // Add other car types following the same pattern
-    ],
-    []
-  );
-
-  const BRANDS = useMemo(
-    () => [
-      { name: "Toyota", href: "/rent/toyota" },
-      { name: "Ferrari", href: "/rent/ferrari" },
-      { name: "Honda", href: "/rent/honda" },
-      { name: "BMW", href: "/rent/bmw" },
-      { name: "Mercedes", href: "/rent/mercedes" },
-      { name: "Audi", href: "/rent/audi" },
-      { name: "Porsche", href: "/rent/porsche" },
-      { name: "Rolls Royce", href: "/rent/rolls-royce" },
-    ],
-    []
-  );
+  const CAR_TYPES = data?.data ? data?.data : [];
+  const BRANDS = brandsData?.data ? brandsData.data : [];
 
   const NAV_ITEMS = useMemo(
     () => [
@@ -440,17 +145,17 @@ const Navbar = ({ isHomePage }) => {
         {isOpen && (
           <DropdownMenu>
             {CAR_TYPES.map((type) => {
-              const subDropdownKey = `${prefix}${type.name}`;
+              const subDropdownKey = `${prefix}${type.cartype}`;
               const isSubOpen = openSubDropdown === subDropdownKey;
 
               return (
-                <div key={type.name} className="relative">
+                <div key={type.cartype} className="relative">
                   <a
-                    href={type.href}
+                    href={`/cartype/${type.slug}`}
                     className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
                     onClick={closeAllDropdowns}
                   >
-                    {type.name}
+                    {type.cartype}
                   </a>
                   <button
                     onClick={(e) => {
@@ -461,42 +166,32 @@ const Navbar = ({ isHomePage }) => {
                   >
                     <ChevronIcon isOpen={isSubOpen} />
                   </button>
-                  {isSubOpen && (
-                    <DropdownMenu position="left-full">
-                      {type.categories.map((category) => {
-                        const modelDropdownKey = `${prefix}${type.name}-${category.name}`;
-                        const isModelOpen =
-                          openSubDropdown === modelDropdownKey;
+                  {isSubOpen &&
+                    type?.car_subcategories &&
+                    type?.car_subcategories.length > 0 && (
+                      <DropdownMenu position="left-full">
+                        {type.car_subcategories.map((category) => {
+                          const modelDropdownKey = `${prefix}${type.cartype}-${category.categorySubType}`;
+                          const isModelOpen =
+                            openSubDropdown === modelDropdownKey;
 
-                        return (
-                          <div key={category.name} className="relative">
-                            <a
-                              href={category.href}
-                              className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
-                              onClick={closeAllDropdowns}
+                          return (
+                            <div
+                              key={category.categorySubType}
+                              className="relative"
                             >
-                              {category.name}
-                            </a>
-
-                            {isModelOpen && category.models.length > 0 && (
-                              <DropdownMenu position="left-full">
-                                {category.models.map((model) => (
-                                  <a
-                                    key={model.name}
-                                    href={model.href}
-                                    className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
-                                    onClick={closeAllDropdowns}
-                                  >
-                                    {model.name}
-                                  </a>
-                                ))}
-                              </DropdownMenu>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </DropdownMenu>
-                  )}
+                              <a
+                                href={`/product-category/${type.slug}/${category.slug}`}
+                                className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
+                                onClick={closeAllDropdowns}
+                              >
+                                {category.categorySubType}
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </DropdownMenu>
+                    )}
                 </div>
               );
             })}
@@ -524,12 +219,12 @@ const Navbar = ({ isHomePage }) => {
           <DropdownMenu>
             {BRANDS.map((brand) => (
               <a
-                key={brand.name}
-                href={brand.href}
+                key={brand.car_Brand}
+                href={`/rent/${brand.slug}`}
                 className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
                 onClick={closeAllDropdowns}
               >
-                {brand.name}
+                {brand.car_Brand}
               </a>
             ))}
           </DropdownMenu>
@@ -553,14 +248,14 @@ const Navbar = ({ isHomePage }) => {
         {isOpen && (
           <div className="pl-4">
             {CAR_TYPES.map((type) => {
-              const subDropdownKey = `mobile-${type.name}`;
+              const subDropdownKey = `mobile-${type.cartype}`;
               const isSubOpen = openSubDropdown === subDropdownKey;
 
               return (
-                <div key={type.name}>
+                <div key={type.cartype}>
                   <div className="flex justify-between items-center">
                     <a
-                      href={type.href}
+                      href={type.slug}
                       className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
                       onClick={(e) => {
                         e.preventDefault(); // Prevent immediate navigation
@@ -568,11 +263,11 @@ const Navbar = ({ isHomePage }) => {
                         setIsOpen(false);
                         // Optional: Add navigation after slight delay
                         setTimeout(() => {
-                          window.location.href = type.href;
+                          window.location.href = type.slug;
                         }, 300);
                       }}
                     >
-                      {type.name}
+                      {type.cartype}
                     </a>
                     <button
                       onClick={(e) => {
@@ -585,58 +280,34 @@ const Navbar = ({ isHomePage }) => {
                     </button>
                   </div>
 
-                  {isSubOpen && (
-                    <div className="pl-4">
-                      {type.categories.map((category) => {
-                        const modelDropdownKey = `mobile-${type.name}-${category.name}`;
-                        const isModelOpen =
-                          openSubDropdown === modelDropdownKey;
-
-                        return (
-                          <div key={category.name}>
-                            <div className="flex justify-between items-center">
-                              <a
-                                href={category.href}
-                                className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  closeAllDropdowns();
-                                  setIsOpen(false);
-                                  setTimeout(() => {
-                                    window.location.href = category.href;
-                                  }, 300);
-                                }}
-                              >
-                                {category.name}
-                              </a>
-                            </div>
-
-                            {isModelOpen && category.models.length > 0 && (
-                              <div className="pl-4">
-                                {category.models.map((model) => (
-                                  <a
-                                    key={model.name}
-                                    href={model.href}
-                                    className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      closeAllDropdowns();
-                                      setIsOpen(false);
-                                      setTimeout(() => {
-                                        window.location.href = model.href;
-                                      }, 300);
-                                    }}
-                                  >
-                                    {model.name}
-                                  </a>
-                                ))}
+                  {isSubOpen &&
+                    type?.car_subcategories &&
+                    type?.car_subcategories.length > 0 && (
+                      <div className="pl-4">
+                        {type.car_subcategories.map((category) => {
+                          return (
+                            <div key={category.categorySubType}>
+                              <div className="flex justify-between items-center">
+                                <a
+                                  href={`/product-category/${type.slug}/${category.slug}`}
+                                  className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    closeAllDropdowns();
+                                    setIsOpen(false);
+                                    setTimeout(() => {
+                                      window.location.href = category.slug;
+                                    }, 300);
+                                  }}
+                                >
+                                  {category.categorySubType}
+                                </a>
                               </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                 </div>
               );
             })}
@@ -662,15 +333,15 @@ const Navbar = ({ isHomePage }) => {
           <div className="pl-4">
             {BRANDS.map((brand) => (
               <a
-                key={brand.name}
-                href={brand.href}
+                key={brand.car_Brand}
+                href={`/rent/${brand.slug}`}
                 className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
                 onClick={() => {
                   closeAllDropdowns();
                   setIsOpen(false);
                 }}
               >
-                {brand.name}
+                {brand.car_Brand}
               </a>
             ))}
           </div>

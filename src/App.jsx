@@ -21,7 +21,7 @@ const App = () => {
     },
     { path: "/cartype/:type", element: <CarTypePage /> },
     {
-      path: "/product-category/:type/:brand",
+      path: "/product-category/:type/:subCategory",
       element: <CarListingByTypePage />,
     },
     {
