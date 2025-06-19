@@ -1,8 +1,10 @@
 import React from 'react'
 
+import {Layout} from'../components'
+
 const Contactus = () => {
   return (
-    <div>Contactus</div>
+   <Layout> <div>Contactus</div></Layout>
   )
 }
 
