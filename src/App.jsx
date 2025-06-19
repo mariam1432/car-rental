@@ -9,6 +9,7 @@ import RentByBrand from "./pages/RentByBrand";
 import FAQS from "./pages/FAQS";
 import CarDetailPage from "./pages/CarDetailPage";
 import BlogPage from "./pages/BlogPage";
+import Contactus from "./pages/Contactus";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -31,6 +32,7 @@ const App = () => {
     { path: "/faqs", element: <FAQS /> },
     { path: "/car/:car", element: <CarDetailPage /> },
     { path: "/blog", element: <BlogPage /> },
+    { path: "/contact-us", element: <Contactus /> },
     { path: "*", element: <HomePage /> },
   ]);
   return (
