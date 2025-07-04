@@ -1,16 +1,36 @@
 import React from "react";
 import { CarCard, Layout } from "../components";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useCarsQuery } from "../services/carApi";
+import { useBrandsQuery } from "../services/brandApi";
+import { CAR_LIST_QUERY } from "../utils/carUtils";
+import { URL } from "../data";
 const RentByBrand = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const { data: bData } = useBrandsQuery({
+    filters: {
+      slug: { $eq: params?.brand },
+    },
+  });
+  const { data: carsData } = useCarsQuery({
+    ...CAR_LIST_QUERY,
+    filters: {
+      brand: { slug: { $eq: params?.brand } },
+    },
+  });
+  const brandData =
+    bData && bData?.data && bData?.data.length > 0 ? bData?.data[0] : {};
+  console.log(brandData);
+  const carList = carsData?.data ? carsData?.data : [];
   return (
     <Layout>
       <div className="pt-[50px] flex flex-col items-center ">
         <div className="flex flex-wrap gap-4 justify-center mb-10">
-          {[...Array(9)].map((_, index) => (
+          {carList.map((carItem, index) => (
             <CarCard
-              onHandleAction={() => navigate("/car/mercedes-cle")}
+              link={`${window.location.origin}/car/${carItem.slug}`}
+              onHandleAction={() => navigate(`/car/${carItem.slug}`)}
               className={
                 "w-[80vw] " + // Mobile: full-width scroll
                 "md:w-[calc(50%-20px)] " + // Tablet: 2 cards per row
@@ -18,14 +38,20 @@ const RentByBrand = () => {
                 "xl:w-[300px]" // Force desktop horizontal scroll
               }
               index={index}
-              price={"899"}
+              price={carItem.pricePerDay}
               imgUrl={
-                "https://www.rotanastar.ae/wp-content/uploads/2025/02/DSC05378-scaled.jpg"
+                `${URL}` +
+                `${
+                  carItem?.images && carItem.images.length > 0
+                    ? carItem.images[0].url
+                    : ""
+                }`
               }
               logo={
-                "https://www.rotanastar.ae/wp-content/uploads/2021/10/main-06.png"
+                `${URL}` +
+                `${carItem?.brand.logo.url ? carItem?.brand.logo.url : ""}`
               }
-              title="Mercedes CLE 200 2025"
+              title={carItem.name}
             />
           ))}
         </div>
@@ -42,10 +68,11 @@ const RentByBrand = () => {
           }}
         >
           <h1 className="text-white text-3xl font-bold">
-            Rent A Lamborghini Dubai | Free Delivery
+            Rent A {brandData?.car_Brand} | Free Delivery
           </h1>
           <p className="text-white text-lg md:text-sm">
-            Rent A Lamborghini Dubai at best prices & with free delivery option.
+            Rent A {brandData?.car_Brand} at best prices & with free delivery
+            option.
             <br />
             Our fleet of Lamborghini rental Dubai has Huracan, STO, Aventador,
             <brr />

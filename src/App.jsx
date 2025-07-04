@@ -10,6 +10,7 @@ import FAQS from "./pages/FAQS";
 import CarDetailPage from "./pages/CarDetailPage";
 import BlogPage from "./pages/BlogPage";
 import Contactus from "./pages/Contactus";
+import BrandsPage from "./pages/BrandsPage";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -22,7 +23,7 @@ const App = () => {
     },
     { path: "/cartype/:type", element: <CarTypePage /> },
     {
-      path: "/product-category/:type/:subCategory",
+      path: "/product-category/:category/:sub-category",
       element: <CarListingByTypePage />,
     },
     {
@@ -33,6 +34,7 @@ const App = () => {
     { path: "/car/:car", element: <CarDetailPage /> },
     { path: "/blog", element: <BlogPage /> },
     { path: "/contact-us", element: <Contactus /> },
+    { path: "/car-rental-brands", element: <BrandsPage /> },
     { path: "*", element: <HomePage /> },
   ]);
   return (

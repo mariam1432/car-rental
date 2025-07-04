@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Accordion,
   ImageCarousel,
@@ -6,40 +6,24 @@ import {
   CarCard,
   ZigzagUnderline,
 } from "../components";
-import { faqsData, sampleImages } from "../data";
-import { useParams } from "react-router-dom";
+import { faqsData, URL } from "../data";
+import { useParams, useNavigate } from "react-router-dom";
+import { useCarQuery, useLazyCarsQuery } from "../services/carApi";
+import {
+  CAR_LIST_QUERY,
+  handleCallClick,
+  handleWhatsAppClick,
+} from "../utils/carUtils";
+
 const CarDetailPage = () => {
-  const crumbNavItems = [
-    { name: "Home", path: "/" },
-    { name: "Luxury", path: "/cartype/luxury-car-rentals" },
-    { name: "Luxury SUV", path: "product-category/luxury/luxury-suv/" },
-    { name: "Audi 2020", path: "/car/audi-q7-2020" },
-  ];
   const features = {
     Model: "2021",
     Insurance: "Full",
-    Deposite: "No",
+    Deposit: "No",
     Delivery: "Free",
     KMs: "900",
-    min_age: "18",
+    "Min age": "18",
   };
-  const carFeatures = [
-    { icon: "fa-solid fa-car", label: "Car Name", value: "Rolls Royce" },
-    { icon: "fa-solid fa-gears", label: "Settings", value: "V12" },
-    { icon: "fa-solid fa-oil-can", label: "Oil", value: "Auto" },
-    { icon: "fa-solid fa-palette", label: "Color", value: "Black" },
-    { icon: "fa-solid fa-users", label: "Users", value: "4" },
-    { icon: "fa-solid fa-door-closed", label: "No of doors", value: "4" },
-    { icon: "fa-solid fa-briefcase", label: "storage", value: "4" },
-    { icon: "fa-solid fa-car-burst", label: "Insurance", value: "Yes" },
-    { icon: "fa-solid fa-bluetooth", label: "bluetooth", value: "Yes" },
-    { icon: "fa-solid fa-street-view", label: "Streetview", value: "yes" },
-    { icon: "fa-solid fa-video", label: "Video camera", value: "yes" },
-    { icon: "fa-solid fa-display", label: "display screen", value: "yes" },
-    { icon: "fa-solid fa-user-shield", label: "display screen", value: "yes" },
-    { icon: "fa-solid fa-volume-high", label: "sound", value: "yes" },
-    { icon: "fa-solid fa-music", label: "music", value: "yes" },
-  ];
 
   const duration = ["Daily", "Weekly", "Monthly"];
   const FeatureItem = ({ label, value }) => (
@@ -55,37 +39,88 @@ const CarDetailPage = () => {
     </div>
   );
   const [activeIndex, setActiveIndex] = useState(-1);
+  const params = useParams();
+  const navigate = useNavigate();
+  const { data } = useCarQuery({
+    filters: {
+      slug: { $eq: params?.car }, // Dynamic slug from URL
+    },
+    pagination: { limit: 1 },
+    populate: "*",
+  });
+  const carDetail =
+    data && data?.data && data?.data.length > 0 ? data.data[0] : {};
+  let relatedCarsfilters = { ...CAR_LIST_QUERY, pagination: { limit: 6 } };
+  const [fetchCars, isLoading] = useLazyCarsQuery();
+  const [relatedCarsList, setRelatedCarsList] = useState([]);
+  useEffect(() => {
+    if (
+      carDetail &&
+      carDetail?.car_category?.slug &&
+      carDetail?.car_subcategory?.slug &&
+      carDetail?.slug
+    ) {
+      relatedCarsfilters["filters"] = {
+        slug: { $ne: carDetail?.slug },
+        car_category: { slug: { $eq: carDetail?.car_category?.slug } },
+        car_subcategory: { slug: { $eq: carDetail?.car_subcategory?.slug } },
+      };
+    }
+
+    if (relatedCarsfilters !== null) {
+      fetchCars({ ...relatedCarsfilters }).then((res) => {
+        if (res && res?.data) setRelatedCarsList(res?.data?.data);
+      });
+    }
+  }, [carDetail]);
+  console.log(relatedCarsList);
   return (
     <Layout>
       <div className="bg-white ">
         <div className="bg-gray-100 flex flex-col gap-5 text-center px-5 md:px-[15%] py-5 md:py-15">
           <h2 className="text-primary text-2xl font-bold">
-            Rent Lamborghini URUS with Rotana Star
+            Rent {carDetail?.name} with Rotana Star
           </h2>
 
-          <span className="text-xs text-gray-700">
-            {crumbNavItems.map((crumb, index) => (
-              <a
-                index={index}
-                className="hover:text-gray-900"
-                href={crumb.path}
-              >
-                {crumb.name}
-                {index === crumbNavItems.length - 1 ? "" : " / "}
-              </a>
-            ))}
+          <span className="text-xs text-gray-700 cursor-pointer">
+            <span className="hover:text-gray-900" onClick={() => navigate("/")}>
+              Home {" / "}
+            </span>
+            <span
+              className="hover:text-gray-900"
+              onClick={() =>
+                navigate(`/cartype/${carDetail?.car_category?.slug}`)
+              }
+            >
+              {carDetail?.car_category?.cartype} {" / "}
+            </span>
+            <span
+              className="hover:text-gray-900"
+              onClick={() =>
+                navigate(
+                  `/product-category/${carDetail?.car_category?.slug}/${carDetail?.car_subcategory?.slug}`
+                )
+              }
+            >
+              {carDetail?.car_subcategory?.categorySubType}
+            </span>
           </span>
           <div className="flex flex-col-reverse md:flex-row gap-10 items-start justify-between">
             <div className="w-[100%] md:w-[60%] flex flex-col gap-5 justify-between">
               <div className="flex flex-col gap-2 md:flex-row justify-between">
                 <ZigzagUnderline
-                  text="Lamgorgini URUS"
+                  text={carDetail?.name}
                   color="black"
                   alignSelf={"start"}
                 />
-                <div className="w-full md:w-fit flex flex-col items-end justify-end text-white text-bold text-lg bg-linear-65 from-white to-primary p-1">
+                <div
+                  style={{ textShadow: `0 1px 3px rgba(0,0,0,0.5)` }}
+                  className="w-full md:w-fit flex flex-col items-end justify-end text-white text-bold text-lg bg-linear-65 from-white to-primary p-1"
+                >
                   <span>Starting from</span>
-                  <span className="text-lg">2000 AED/day</span>
+                  <span className="text-lg">
+                    {carDetail?.pricePerDay} AED/day
+                  </span>
                 </div>
               </div>
               <div className="flex flex-row gap-5">
@@ -112,19 +147,34 @@ const CarDetailPage = () => {
               </div>
               <div className="flex items-center gap-5">
                 <button
+                  onClick={() =>
+                    handleWhatsAppClick(
+                      carDetail?.name,
+                      `${window.location.origin}/car/${carDetail?.slug}`
+                    )
+                  }
                   className="bg-green-600 text-white flex flex-row items-center gap-1 py-2 px-8 cursor-pointer transition-all duration-300 ease-in-out 
                     hover:-translate-y-1"
                 >
                   <i className="fa-brands fa-whatsapp"></i>
                   <span>Whatsapp</span>
                 </button>
-                <button className="bg-primary text-white flex flex-row items-center gap-1 py-2 px-8 cursor-pointer">
+                <button
+                  onClick={handleCallClick}
+                  className="bg-primary text-white flex flex-row items-center gap-1 py-2 px-8 cursor-pointer"
+                >
                   Contact Us
                 </button>
               </div>
             </div>
             <div className="w-[100%] md:w-[40%]">
-              <ImageCarousel images={sampleImages} />
+              <ImageCarousel
+                images={
+                  carDetail && carDetail.images && carDetail.images.length > 0
+                    ? carDetail?.images.map((i) => `${URL + i.url}`)
+                    : []
+                }
+              />
             </div>
           </div>
         </div>
@@ -132,17 +182,104 @@ const CarDetailPage = () => {
         <div className="px-5 md:px-[15%] py-10 w-full md:w-[60%]">
           <h1 className="text-xl">Car Features</h1>
           <div className="grid grid-cols-3">
-            {carFeatures.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600"
-              >
-                <i className={`${feature.icon} text-primary`} />
-                <p className="text-[10px] font-medium text-gray-800">
-                  {feature.value}
-                </p>
-              </div>
-            ))}
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-car text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.brand?.car_Brand}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-gears text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.settings ? carDetail.settings : "v12"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-oil-can text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.engineType ? carDetail.engineType : "oil"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-palette text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.color ? carDetail.color : "Black"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-users text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.doors ? carDetail.doors : "4"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-door-closed text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.doors ? carDetail.doors : "4"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-briefcase text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.doors ? carDetail.doors : "4"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-car-burst text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.insurance
+                  ? carDetail.insurance
+                    ? "Yes"
+                    : "No"
+                  : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-bluetooth text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.bluetooth
+                  ? carDetail.bluetooth
+                    ? "Yes"
+                    : "No"
+                  : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-street-view text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.streetView ? carDetail.streetView : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-video text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.videoCamera ? carDetail.videoCamera : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-display text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.displayScreen ? carDetail.displayScreen : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-user-shield text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.userShield ? carDetail.userShield : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-volume-high text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.soundSystem ? carDetail.soundSystem : "Yes"}
+              </p>
+            </div>
+            <div className="flex items-center p-4 gap-4 border-b-1 border-dashed border-green-600">
+              <i className={`fa-solid fa-music text-primary`} />
+              <p className="text-[10px] font-medium text-gray-800">
+                {carDetail?.music ? carDetail.music : "Yes"}
+              </p>
+            </div>
           </div>
         </div>
         <div className="px-5 md:px-[15%] py-10 w-full md:w-[75%] flex flex-col gap-2">
@@ -244,31 +381,44 @@ const CarDetailPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start gap-4 px-5 md:px-[15%] py-10 w-full">
-          <ZigzagUnderline text="Related Cars" />
-          <div className="flex flex-wrap gap-4 justify-center mb-10">
-            {[...Array(6)].map((_, index) => (
-              <CarCard
-                onHandleAction={() => navigate("/car/mercedes-cle")}
-                className={
-                  "w-[80vw] " + // Mobile: full-width scroll
-                  "md:w-[calc(50%-20px)] " + // Tablet: 2 cards per row
-                  "lg:w-[calc(25%-20px)] " + // Desktop: 4 cards (when not scrolling)
-                  "xl:w-[300px]" // Force desktop horizontal scroll
-                }
-                index={index}
-                price={"899"}
-                imgUrl={
-                  "https://www.rotanastar.ae/wp-content/uploads/2025/02/DSC05378-scaled.jpg"
-                }
-                logo={
-                  "https://www.rotanastar.ae/wp-content/uploads/2021/10/main-06.png"
-                }
-                title="Mercedes CLE 200 2025"
-              />
-            ))}
+        {relatedCarsList && relatedCarsList.length > 0 ? (
+          <div className="flex flex-col items-start gap-4 px-5 md:px-[15%] py-10 w-full">
+            <ZigzagUnderline text="Related Cars" />
+            <div className="flex flex-wrap gap-4 justify-center mb-10">
+              {relatedCarsList.map((carItem, index) => (
+                <CarCard
+                  link={`${window.location.origin}/car/${carItem.slug}`}
+                  onHandleAction={() => {
+                    navigate(`/car/${carItem.slug}`);
+                  }}
+                  className={
+                    "w-[80vw] " + // Mobile: full-width scroll
+                    "md:w-[calc(50%-20px)] " + // Tablet: 2 cards per row
+                    "lg:w-[calc(25%-20px)] " + // Desktop: 4 cards (when not scrolling)
+                    "xl:w-[300px]" // Force desktop horizontal scroll
+                  }
+                  index={index}
+                  price={carItem.pricePerDay}
+                  imgUrl={
+                    `${URL}` +
+                    `${
+                      carItem?.images && carItem.images.length > 0
+                        ? carItem.images[0].url
+                        : ""
+                    }`
+                  }
+                  logo={
+                    `${URL}` +
+                    `${carItem?.brand.logo.url ? carItem?.brand.logo.url : ""}`
+                  }
+                  title={carItem.name}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     </Layout>
   );

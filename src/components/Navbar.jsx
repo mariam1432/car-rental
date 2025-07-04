@@ -1,11 +1,15 @@
 import { useState, useMemo } from "react";
 import logo from "../assets/logo.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useBrandsQuery } from "../services/brandApi";
+import { CAR_CATEGORY_QUERY } from "../utils/carUtils";
+
 const Navbar = ({ isHomePage }) => {
+  const currentPath = window.location.pathname;
+  console.log(currentPath);
   const navigate = useNavigate();
-  const { data } = useCategoriesQuery({ populate: "*" });
+  const { data } = useCategoriesQuery({ ...CAR_CATEGORY_QUERY, populate: "*" });
   const { data: brandsData } = useBrandsQuery({});
 
   const [isOpen, setIsOpen] = useState(false);
@@ -63,6 +67,7 @@ const Navbar = ({ isHomePage }) => {
     label,
     href,
     onClick,
+    selected = false,
     hasDropdown = false,
     isDropdownOpen = false,
   }) => (
@@ -70,7 +75,9 @@ const Navbar = ({ isHomePage }) => {
       {href ? (
         <a
           href={href}
-          className="px-3 py-2 text-xs text-gray-900 hover:text-primary"
+          className={`${
+            selected ? "text-primary" : "text-gray-900"
+          } px-3 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-900 hover:text-primary`}
           onClick={closeAllDropdowns}
         >
           {label}
@@ -78,14 +85,22 @@ const Navbar = ({ isHomePage }) => {
       ) : (
         <button
           onClick={onClick}
-          className="px-3 py-2 text-xs text-gray-900 hover:text-primary flex items-center"
+          className="px-3 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-900 hover:text-primary flex items-center"
         >
           {label}
           {hasDropdown && <ChevronIcon isOpen={isDropdownOpen} />}
         </button>
       )}
-      <span className="absolute left-0 -top-2 w-full h-[1px] bg-primary origin-top scale-y-0 transition-transform duration-400 ease-in-out group-hover:scale-y-100"></span>
-      <span className="absolute left-0 -bottom-2 w-full h-[1px] bg-primary origin-bottom scale-y-0 transition-transform duration-400 ease-in-out group-hover:scale-y-100"></span>
+      <span
+        className={`absolute left-0 -top-2 w-full h-[1px] bg-primary origin-top transition-transform duration-400 ease-in-out ${
+          selected || "group-hover:scale-y-100 scale-y-0"
+        } ${selected ? "scale-y-100" : ""}`}
+      ></span>
+      <span
+        className={`absolute left-0 -bottom-2 w-full h-[1px] bg-primary origin-bottom transition-transform duration-400 ease-in-out ${
+          selected || "group-hover:scale-y-100 scale-y-0"
+        } ${selected ? "scale-y-100" : ""}`}
+      ></span>
     </div>
   );
 
@@ -101,6 +116,7 @@ const Navbar = ({ isHomePage }) => {
     label,
     href,
     onClick,
+    selected,
     hasDropdown = false,
     isDropdownOpen = false,
   }) => (
@@ -108,7 +124,9 @@ const Navbar = ({ isHomePage }) => {
       {href ? (
         <a
           href={href}
-          className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
+          className={`block px-3 py-2 text-xs md:text-sm text-gray-900 hover:bg-primary ${
+            selected ? "bg-primary" : ""
+          }`}
           onClick={() => {
             closeAllDropdowns();
             setIsOpen(false);
@@ -119,7 +137,7 @@ const Navbar = ({ isHomePage }) => {
       ) : (
         <button
           onClick={onClick}
-          className="w-full text-left px-3 py-2 text-basm text-gray-900 hover:bg-primary flex justify-between items-center"
+          className="w-full text-left px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary flex justify-between items-center"
         >
           {label}
           {hasDropdown && <ChevronIcon isOpen={isDropdownOpen} />}
@@ -136,7 +154,7 @@ const Navbar = ({ isHomePage }) => {
     return (
       <div className="relative">
         <NavLink
-          label="Rent by Type of Cars"
+          label="Rent by Type"
           onClick={() => toggleDropdown(dropdownKey)}
           hasDropdown
           isDropdownOpen={isOpen}
@@ -152,20 +170,25 @@ const Navbar = ({ isHomePage }) => {
                 <div key={type.cartype} className="relative">
                   <a
                     href={`/cartype/${type.slug}`}
-                    className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
+                    className="block px-4 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-700 hover:bg-primary"
                     onClick={closeAllDropdowns}
                   >
                     {type.cartype}
                   </a>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSubDropdown(subDropdownKey);
-                    }}
-                    className="absolute right-0 top-0 px-4 py-2"
-                  >
-                    <ChevronIcon isOpen={isSubOpen} />
-                  </button>
+                  {type.car_subcategories &&
+                  type.car_subcategories.length > 0 ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSubDropdown(subDropdownKey);
+                      }}
+                      className="absolute right-0 top-0 px-4 py-2"
+                    >
+                      <ChevronIcon isOpen={isSubOpen} />
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                   {isSubOpen &&
                     type?.car_subcategories &&
                     type?.car_subcategories.length > 0 && (
@@ -182,7 +205,7 @@ const Navbar = ({ isHomePage }) => {
                             >
                               <a
                                 href={`/product-category/${type.slug}/${category.slug}`}
-                                className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
+                                className="block px-4 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-700 hover:bg-primary"
                                 onClick={closeAllDropdowns}
                               >
                                 {category.categorySubType}
@@ -209,7 +232,7 @@ const Navbar = ({ isHomePage }) => {
     return (
       <div className="relative">
         <NavLink
-          label="Rent by Brands"
+          label="Rent by Brand"
           onClick={() => toggleDropdown(dropdownKey)}
           hasDropdown
           isDropdownOpen={isOpen}
@@ -221,7 +244,7 @@ const Navbar = ({ isHomePage }) => {
               <a
                 key={brand.car_Brand}
                 href={`/rent/${brand.slug}`}
-                className="block px-4 py-2 text-xs text-gray-700 hover:bg-primary"
+                className="block px-4 py-2 text-xs md:text-sm whitespace-nowrap text-gray-700 hover:bg-primary"
                 onClick={closeAllDropdowns}
               >
                 {brand.car_Brand}
@@ -239,7 +262,7 @@ const Navbar = ({ isHomePage }) => {
     return (
       <div>
         <MobileNavLink
-          label="Rent by Type of Cars"
+          label="Rent by Type"
           onClick={() => toggleDropdown("mobileCarTypes")}
           hasDropdown
           isDropdownOpen={isOpen}
@@ -256,12 +279,11 @@ const Navbar = ({ isHomePage }) => {
                   <div className="flex justify-between items-center">
                     <a
                       href={type.slug}
-                      className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
+                      className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
                       onClick={(e) => {
-                        e.preventDefault(); // Prevent immediate navigation
+                        e.preventDefault();
                         closeAllDropdowns();
                         setIsOpen(false);
-                        // Optional: Add navigation after slight delay
                         setTimeout(() => {
                           window.location.href = type.slug;
                         }, 300);
@@ -290,7 +312,7 @@ const Navbar = ({ isHomePage }) => {
                               <div className="flex justify-between items-center">
                                 <a
                                   href={`/product-category/${type.slug}/${category.slug}`}
-                                  className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
+                                  className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
                                   onClick={(e) => {
                                     e.preventDefault();
                                     closeAllDropdowns();
@@ -323,7 +345,7 @@ const Navbar = ({ isHomePage }) => {
     return (
       <div>
         <MobileNavLink
-          label="Rent by Brands"
+          label="Rent by Brand"
           onClick={() => toggleDropdown("mobileBrands")}
           hasDropdown
           isDropdownOpen={isOpen}
@@ -335,7 +357,7 @@ const Navbar = ({ isHomePage }) => {
               <a
                 key={brand.car_Brand}
                 href={`/rent/${brand.slug}`}
-                className="block px-3 py-2 text-basm text-gray-900 hover:bg-primary"
+                className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
                 onClick={() => {
                   closeAllDropdowns();
                   setIsOpen(false);
@@ -369,16 +391,26 @@ const Navbar = ({ isHomePage }) => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+          <div className="hidden md:flex md:items-center gap-x-2 lg:gap-x-4">
             {NAV_ITEMS.slice(0, 2).map((item) => (
-              <NavLink key={item.label} label={item.label} href={item.href} />
+              <NavLink
+                key={item.label}
+                label={item.label}
+                href={item.href}
+                selected={item.href === currentPath}
+              />
             ))}
 
             {renderCarTypeDropdown()}
             {renderBrandsDropdown()}
 
             {NAV_ITEMS.slice(2).map((item) => (
-              <NavLink key={item.label} label={item.label} href={item.href} />
+              <NavLink
+                key={item.label}
+                label={item.label}
+                href={item.href}
+                selected={item.href === currentPath}
+              />
             ))}
           </div>
 
@@ -437,6 +469,7 @@ const Navbar = ({ isHomePage }) => {
                 key={item.label}
                 label={item.label}
                 href={item.href}
+                selected={currentPath === item.href}
               />
             ))}
 
@@ -448,6 +481,7 @@ const Navbar = ({ isHomePage }) => {
                 key={item.label}
                 label={item.label}
                 href={item.href}
+                selected={currentPath === item.href}
               />
             ))}
           </div>

@@ -1,18 +1,32 @@
 import React, { useState } from "react";
 import { CarCard, Layout, Pagination } from "../components";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useCarsQuery } from "../services/carApi";
+import { CAR_LIST_QUERY } from "../utils/carUtils";
+import { URL } from "../data";
 const CarListingByTypePage = () => {
   const [selectedPage, setSelectedPage] = useState(1);
+
+  const params = useParams();
   const navigate = useNavigate();
+  const { data: carsData } = useCarsQuery({
+    ...CAR_LIST_QUERY,
+    filters: {
+      car_category: { slug: { $eq: params?.category } },
+      car_subcategory: { slug: { $eq: params?.["sub-category"] } },
+    },
+  });
+  const carList = carsData?.data ? carsData?.data : [];
+
   return (
     <Layout>
       <div className="w-full">
         <div className="pt-[50px]">
           <div className="flex flex-wrap gap-4 justify-center mb-10">
-            {[...Array(13)].map((_, index) => (
+            {carList.map((carItem, index) => (
               <CarCard
-                onHandleAction={() => navigate("/car/mercedes-cle")}
+                link={`${window.location.origin}/car/${carItem.slug}`}
+                onHandleAction={() => navigate(`/car/${carItem.slug}`)}
                 className={
                   "w-[80vw] " + // Mobile: full-width scroll
                   "md:w-[calc(50%-20px)] " + // Tablet: 2 cards per row
@@ -20,14 +34,20 @@ const CarListingByTypePage = () => {
                   "xl:w-[300px]" // Force desktop horizontal scroll
                 }
                 index={index}
-                price={"899"}
+                price={carItem.pricePerDay}
                 imgUrl={
-                  "https://www.rotanastar.ae/wp-content/uploads/2025/02/DSC05378-scaled.jpg"
+                  `${URL}` +
+                  `${
+                    carItem?.images && carItem.images.length > 0
+                      ? carItem.images[0].url
+                      : ""
+                  }`
                 }
                 logo={
-                  "https://www.rotanastar.ae/wp-content/uploads/2021/10/main-06.png"
+                  `${URL}` +
+                  `${carItem?.brand.logo.url ? carItem?.brand.logo.url : ""}`
                 }
-                title="Mercedes CLE 200 2025"
+                title={carItem.name}
               />
             ))}
           </div>

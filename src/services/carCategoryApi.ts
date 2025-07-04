@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { carCategory } from "../models/carCategory";
-
+import { buildQueryParams } from "../utils/carUtils";
 export const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:1337/api/',
 });
@@ -15,27 +15,24 @@ export const carCategoryApi = createApi({
         categories: builder.query<{
             categories: carCategory[],
             pagination: { totalItems: number; totalPages: number; currentPage: number; limit: number }
-        }, { populate?: string; page?: number; limit?: number; search?: string; sort?: string; order?: string; filters?: Record<string, string> }>({
+        }, { options?: any; page?: number; limit?: number; search?: string; sort?: string; order?: string; filters?: Record<string, string> }>({
             query: (
-                { populate }
-                // { page = 1, limit = 10, search, sort = "createdAt", order = "desc", filters }
+
+                options
             ) => {
-                // const params = new URLSearchParams();
+                const {
+                    fields = [],
+                    populate = {},
+                    filters = {},
+                    pagination = {},
+                    sort = {}
+                } = options
+                const query = buildQueryParams({
+                    fields, populate, filters, pagination, sort
+                });
+                console.log(query, 'paramss')
+                return `car-categories?${decodeURIComponent(query)}`
 
-                // params.append("page", page.toString());
-                // params.append("limit", limit.toString());
-                // if (search && search != "") params.append("search", search);
-                // if (sort) params.append("sort", sort);
-                // if (order) params.append("order", order);
-
-                // // Append additional filters
-                // if (filters) {
-                //     Object.entries(filters).forEach(([key, value]) => {
-                //         params.append(key, value);
-                //     });
-                // }
-
-                return `car-categories?${populate && `populate=${populate}`}`;
             },
             providesTags: ["carCategories"],
         }),
@@ -48,5 +45,5 @@ export const carCategoryApi = createApi({
     }),
 });
 export const {
-    useCategoriesQuery
+    useCategoriesQuery,
 } = carCategoryApi
