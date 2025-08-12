@@ -15,7 +15,7 @@ const Layout = ({ children, isHome }) => {
       ) : (
         <Navbar />
       )}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow mt-20">{children}</main>
       <Footer />
     </div>
   );

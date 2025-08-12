@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import logo from "../assets/logo.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useBrandsQuery } from "../services/brandApi";
@@ -7,7 +6,6 @@ import { CAR_CATEGORY_QUERY } from "../utils/carUtils";
 
 const Navbar = ({ isHomePage }) => {
   const currentPath = window.location.pathname;
-  console.log(currentPath);
   const navigate = useNavigate();
   const { data } = useCategoriesQuery({ ...CAR_CATEGORY_QUERY, populate: "*" });
   const { data: brandsData } = useBrandsQuery({});
@@ -30,7 +28,10 @@ const Navbar = ({ isHomePage }) => {
     setOpenSubDropdown(null);
   };
 
-  const CAR_TYPES = data?.data ? data?.data : [];
+  const CAR_TYPES =
+    data?.data && data?.data.length > 0
+      ? data?.data.filter((d) => d.slug !== "exotic-cars")
+      : [];
   const BRANDS = brandsData?.data ? brandsData.data : [];
 
   const NAV_ITEMS = useMemo(
@@ -77,7 +78,7 @@ const Navbar = ({ isHomePage }) => {
           href={href}
           className={`${
             selected ? "text-primary" : "text-gray-900"
-          } px-3 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-900 hover:text-primary`}
+          } px-3 py-2 text-xs md:text-sm whitespace-nowrap hover:text-primary`}
           onClick={closeAllDropdowns}
         >
           {label}
@@ -85,7 +86,7 @@ const Navbar = ({ isHomePage }) => {
       ) : (
         <button
           onClick={onClick}
-          className="px-3 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-900 hover:text-primary flex items-center"
+          className="px-3 py-2 text-xs md:text-sm whitespace-nowrap text-gray-900 hover:text-primary flex items-center"
         >
           {label}
           {hasDropdown && <ChevronIcon isOpen={isDropdownOpen} />}
@@ -137,7 +138,7 @@ const Navbar = ({ isHomePage }) => {
       ) : (
         <button
           onClick={onClick}
-          className="w-full text-left px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary flex justify-between items-center"
+          className="w-full text-left px-3 py-2 text-xs md:text-sm lg:text-base text-gray-900 hover:bg-primary flex justify-between items-center"
         >
           {label}
           {hasDropdown && <ChevronIcon isOpen={isDropdownOpen} />}
@@ -170,7 +171,7 @@ const Navbar = ({ isHomePage }) => {
                 <div key={type.cartype} className="relative">
                   <a
                     href={`/cartype/${type.slug}`}
-                    className="block px-4 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-700 hover:bg-primary"
+                    className="block px-4 py-2 text-sm md:text-xs whitespace-nowrap text-gray-700 hover:bg-primary"
                     onClick={closeAllDropdowns}
                   >
                     {type.cartype}
@@ -375,9 +376,10 @@ const Navbar = ({ isHomePage }) => {
   return (
     <nav
       className={`
-        fixed md:static w-full z-50
+        fixed  w-full z-2000
         bg-black md:bg-white
-        ${isHomePage ? "md:!bg-transparent" : "md:shadow-2xl"}
+        
+        ${isHomePage ? "md:!bg-gray-200" : "md:shadow-2xl"}
       `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -387,7 +389,11 @@ const Navbar = ({ isHomePage }) => {
             className="flex items-center cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <img src={logo} alt="rotanastar" className="w-30 h-auto" />
+            <img
+              src={"../../logo.png"}
+              alt="rotanastar"
+              className="w-30 h-auto min-h-10"
+            />
           </div>
 
           {/* Desktop Menu */}

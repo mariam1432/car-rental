@@ -1,11 +1,11 @@
 import React from "react";
-import { Layout, CarBrandCard } from "../components";
+import { Layout, CarBrandCard, Loader } from "../components";
 import { useBrandsQuery } from "../services/brandApi";
 import { URL } from "../data";
 import { useNavigate } from "react-router-dom";
 
 const BrandsPage = () => {
-  const { data: brandsData } = useBrandsQuery({
+  const { data: brandsData, isLoading } = useBrandsQuery({
     fields: ["car_Brand", "slug", "id"],
     populate: {
       logo: {
@@ -18,6 +18,7 @@ const BrandsPage = () => {
 
   return (
     <Layout>
+      {isLoading && <Loader />}
       <div className="w-full bg-white px-8 sm:px-16 lg:px-25 py-30 sm:py-20 md:py-20 lg:py-10">
         <div className="max-w-7xl mx-auto">
           {/* Centering container */}

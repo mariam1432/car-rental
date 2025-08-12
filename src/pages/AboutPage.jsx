@@ -4,131 +4,159 @@ import { Layout, Navbar, ZigzagUnderline } from "../components";
 const AboutPage = () => {
   return (
     <Layout>
-      <section
-        className="relative min-h-screen flex flex-col md:flex-row overflow-hidden my-0 ml-0 md:my-16 md:ml-20"
-        style={{
-          backgroundImage:
-            "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB3wXijJ7cxPRVBIh30p00m9RUkmeArc8g6w&s)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="relative bg-[#f5f5f5] md:w-1/2 w-full p-18 md:p-8 clip-diagonal shadow-2xl z-10">
-          <ZigzagUnderline text="About Rotana Star"></ZigzagUnderline>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            Providing only the best cars at the most competitive price is the
-            core value that Rotana Star is following. Our concept is built
-            entirely around what the client wants. We pride ourselves as the
-            leading UAE car rental company. Having our fleet with cars that are
-            less than 3 years old and carefully taken care of, allows us to keep
-            them in pristine condition, always inspected and sanitized. The fact
-            that we own all our cars makes us unique and our prices the best in
-            the market too.
-            <br />
-            <br />
-            So any customer can choose the car based on their personal
-            preferences, budget, and purposes. Every vehicle, like a person, is
-            unique, with its soul and signature. We have a wide range of sports,
-            luxury, exotic, convertible, and economic cars as well as SUVs for
-            any occasion or expectation.
-            <br />
-            <br />
-            Many of our clients know exactly what they want to rent, but if you
-            are confused and need advice, we are happy to help. Our client
-            satisfaction is our priority, so we have created an ideal formula
-            that helps us to put smiles on the customers’ faces. Amazing value
-            of money combined with top-notch service gives an unforgettable
-            experience.
-            <br />
-            <br />
-            To enjoy it more, we made sure that the car booking process with
-            Rotana Star is easy and stress-free. Simply select the car you want,
-            leave a request online or call us to book it. For the delivery, we
-            offer 2 options. You can either come to pick up the car from our
-            Dubai showroom, or the car can be handed over to you anywhere in the
-            UAE.
-          </p>
+      <div className="bg-gray-50">
+        {/* Hero Section */}
+        <div className="relative h-64 md:h-96 w-full bg-gray-900 flex items-center justify-center">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80')] bg-cover bg-center opacity-50"></div>
+          <div className="relative z-10 text-center px-4">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              About Arab Star
+            </h1>
+            <p className="text-xl text-white max-w-2xl mx-auto">
+              Premium car rental service in the heart of Dubai
+            </p>
+          </div>
         </div>
-      </section>
-      <section
-        className="relative min-h-screen flex flex-col md:flex-row overflow-hidden my-0 ml-0 md:my-16 md:ml-20"
-        style={{
-          backgroundImage:
-            "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB3wXijJ7cxPRVBIh30p00m9RUkmeArc8g6w&s)",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="relative bg-[#f5f5f5] md:w-1/2 w-full p-18 md:p-8 clip-diagonal shadow-2xl z-10">
-          <ZigzagUnderline text="Where are you located?"></ZigzagUnderline>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            We are conveniently located in the heart of Al Barsha, right next to
-            the Mall of the Emirates in Dubai.
-          </p>
-          <h3 className="text-primary text-xl font-bold">
-            Do you deliver all over the UAE?{" "}
-          </h3>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            Yes. No matter in which Emirate, we provide free delivery for any
-            car to the house, office, or airport.
-          </p>
-          <h3 className="text-primary text-xl font-bold">
-            Do you have a chauffeur service?
-          </h3>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            Yes, for those who want to enjoy their time to the fullest,
-            exploring and appreciating the views and having fun, we provide a
-            chauffeur as well as limousine service.
-          </p>
-          <h3 className="text-primary text-xl font-bold">
-            Why is it better to rent a car with Rotana Star?
-          </h3>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            Many of you want to enjoy your time to the fullest without waiting
-            for public transport or being on the lookout for a taxi. At Rotana
-            Star we have a fleet of cars ranging from exotic Lamborghini and
-            Ferrari, luxury Mercedes and Range Rover, sports Bentley and
-            McLaren, SUVs Porsche and Cadillac to economy Kia and Mazda. With a
-            great variety of choices available for any pocket and preferences,
-            we make sure that everyone finds the ideal car for rent. Our
-            ‘can-do’ policy and exceptional customer service help to make your
-            renting and driving experience bespoke. We know how important it is
-            to communicate smoothly and understand what our customers are
-            looking for, so the whole team works closely to ensure that all your
-            requests and expectations are fulfilled.
-          </p>
-          <h3 className="text-primary text-xl font-bold">Our Values:</h3>
-          <p className="text-base md:text-lg text-gray-700 leading-relaxed mr-0 md:mr-20">
-            Transparency and no hidden cost. You pay only for what is in the
-            contract.
-            <br />
-            Respect. And it comes to both our clients and teammates as
-            communication is the foundation of long-lasting relationships.
-            <br />
-            The best cost-quality ratio. We want our customers to be able to
-            rent a car they have been dreaming of, so having our own fleet
-            allows us to rent even exotic cars with the best prices on the
-            market.
-            <br /> Honesty. We don’t advertise or promise something we don’t
-            deliver. All our cars listed on the website are available for
-            booking.
-            <br />
-            Client focus. We treat every client like a family member. We are
-            happy to see customers satisfied with their choice and our service.
-            Of course, no one is perfect and sometimes complaints happen, so we
-            make sure to take them into account and improve ourselves to ensure
-            they do not happen again.
-            <br /> Safety. With the current situation, we take sanitization
-            seriously to provide ultimate car cleanliness and safety to every
-            client.
-            <br /> Diversity. We always make sure to have new editions not only
-            in models but also in colors for our premium car fleet, purchased
-            directly from certified dealers.
-          </p>
+
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+          {/* About Section */}
+          <section className="mb-20">
+            <div className="flex flex-col lg:flex-row gap-12 items-center">
+              <div className="lg:w-1/2">
+                <ZigzagUnderline text="Our Story" className="mb-8" />
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Providing only the best cars at the most competitive price is
+                  the core value that Arab Star is following. Our concept is
+                  built entirely around what the client wants.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  We pride ourselves as the leading UAE car rental company.
+                  Having our fleet with cars that are less than 3 years old and
+                  carefully taken care of, allows us to keep them in pristine
+                  condition, always inspected and sanitized. The fact that we
+                  own all our cars makes us unique and our prices the best in
+                  the market too.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  So any customer can choose the car based on their personal
+                  preferences, budget, and purposes. Every vehicle, like a
+                  person, is unique, with its soul and signature. We have a wide
+                  range of sports, luxury, exotic, convertible, and economic
+                  cars as well as SUVs for any occasion or expectation.
+                </p>
+              </div>
+              <div className="lg:w-1/2">
+                <div className="bg-white p-6 rounded-xl shadow-lg">
+                  <img
+                    src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80"
+                    alt="Luxury cars"
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Values Section */}
+          <section className="mb-20">
+            <div className="flex flex-col lg:flex-row gap-12 items-center">
+              <div className="lg:w-1/2 order-2 lg:order-1">
+                <div className="bg-white p-6 rounded-xl shadow-lg">
+                  <img
+                    src="https://images.unsplash.com/photo-1592853625601-bb9d23da12fc?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    alt="Car "
+                    className="w-full h-auto rounded-lg"
+                  />
+                </div>
+              </div>
+              <div className="lg:w-1/2 order-1 lg:order-2">
+                <ZigzagUnderline text="Our Values" className="mb-8" />
+                <div className="space-y-6">
+                  <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-bold text-primary mb-2">
+                      Transparency
+                    </h3>
+                    <p className="text-gray-700">
+                      No hidden costs. You pay only for what is in the contract.
+                    </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-bold text-primary mb-2">
+                      Respect
+                    </h3>
+                    <p className="text-gray-700">
+                      For both our clients and teammates as communication is the
+                      foundation of long-lasting relationships.
+                    </p>
+                  </div>
+                  <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-bold text-primary mb-2">
+                      Best Value
+                    </h3>
+                    <p className="text-gray-700">
+                      We want our customers to rent their dream car with the
+                      best prices on the market.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section>
+            <ZigzagUnderline
+              text="Frequently Asked Questions"
+              className="mb-12 text-center"
+            />
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-bold text-primary mb-3">
+                  Where are you located?
+                </h3>
+                <p className="text-gray-700">
+                  We are conveniently located in the heart of Al Barsha, right
+                  next to the Mall of the Emirates in Dubai.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-bold text-primary mb-3">
+                  Do you deliver all over the UAE?
+                </h3>
+                <p className="text-gray-700">
+                  Yes. No matter in which Emirate, we provide free delivery for
+                  any car to the house, office, or airport.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-bold text-primary mb-3">
+                  Do you have a chauffeur service?
+                </h3>
+                <p className="text-gray-700">
+                  Yes, for those who want to enjoy their time to the fullest,
+                  exploring and appreciating the views and having fun, we
+                  provide a chauffeur as well as limousine service.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-bold text-primary mb-3">
+                  Why choose Arab Star?
+                </h3>
+                <p className="text-gray-700">
+                  With a great variety of choices available for any pocket and
+                  preferences, we make sure that everyone finds the ideal car.
+                  Our 'can-do' policy and exceptional customer service make your
+                  renting experience bespoke.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
     </Layout>
   );
 };

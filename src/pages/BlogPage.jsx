@@ -37,7 +37,7 @@ const BlogPage = () => {
             description={article.description}
             date={article.date}
             noOfComments={article.noOfComments}
-            handleClick={() => console.log("clicked")}
+            handleClick={() => console.log("")}
           />
         ))}
       </div>

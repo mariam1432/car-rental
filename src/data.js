@@ -1,32 +1,33 @@
-import AstonMartin from "./assets/AstonMartin.webp";
-import cadillac from "./assets/cadillac.png";
-import ferrari from "./assets/ferrari.png";
-import BMW from "./assets/BMW.png";
-import Audi from "./assets/Audi.png";
-import Lamborghini from "./assets/Lamborghini.png";
-import maclaren from "./assets/maclaren.png";
-import MercedesBenz from "./assets/MercedesBenz.png";
-import maseratiLogo from "./assets/maseratiLogo.png";
-import porsche from "./assets/porsche.webp";
-import rover from "./assets/rover.png";
-import mini from "./assets/mini.png";
-import bently from "./assets/bentley.png";
-export const URL = "http://localhost:1337";
-export const carBrandList = [
-  { id: 1, logo: AstonMartin, title: "Aston Martin" },
-  { id: 2, logo: cadillac, title: "Cadillac" },
-  { id: 3, logo: ferrari, title: "Ferrari" },
-  { id: 4, logo: BMW, title: "BMW" },
-  { id: 5, logo: Audi, title: "Audi" },
-  { id: 6, logo: Lamborghini, title: "Lamborghini" },
-  { id: 7, logo: maclaren, title: "Maclaren" },
-  { id: 8, logo: MercedesBenz, title: "MercedesBenz" },
-  { id: 9, logo: maseratiLogo, title: "Maserati" },
-  { id: 10, logo: porsche, title: "Porsche" },
-  { id: 11, logo: rover, title: "Rover" },
-  { id: 12, logo: mini, title: "mini" },
-  { id: 13, logo: bently, title: "Bently" },
-];
+// import AstonMartin from "./assets/AstonMartin.webp";
+// import cadillac from "./assets/cadillac.png";
+// import ferrari from "./assets/ferrari.png";
+// import BMW from "./assets/BMW.png";
+// import Audi from "./assets/Audi.png";
+// import Lamborghini from "./assets/Lamborghini.png";
+// import maclaren from "./assets/maclaren.png";
+// import MercedesBenz from "./assets/MercedesBenz.png";
+// import maseratiLogo from "./assets/maseratiLogo.png";
+// import porsche from "./assets/porsche.webp";
+// import rover from "./assets/rover.png";
+// import mini from "./assets/mini.png";
+// import bently from "./assets/bentley.png";
+export const URL = "https://carrentalbackend-rzqc.onrender.com/api/";
+// export const URL="http://localhost:1337/api/"
+// export const carBrandList = [
+//   { id: 1, logo: AstonMartin, title: "Aston Martin" },
+//   { id: 2, logo: cadillac, title: "Cadillac" },
+//   { id: 3, logo: ferrari, title: "Ferrari" },
+//   { id: 4, logo: BMW, title: "BMW" },
+//   { id: 5, logo: Audi, title: "Audi" },
+//   { id: 6, logo: Lamborghini, title: "Lamborghini" },
+//   { id: 7, logo: maclaren, title: "Maclaren" },
+//   { id: 8, logo: MercedesBenz, title: "MercedesBenz" },
+//   { id: 9, logo: maseratiLogo, title: "Maserati" },
+//   { id: 10, logo: porsche, title: "Porsche" },
+//   { id: 11, logo: rover, title: "Rover" },
+//   { id: 12, logo: mini, title: "mini" },
+//   { id: 13, logo: bently, title: "Bently" },
+// ];
 
 export const faqsData = [
   {
@@ -51,14 +52,14 @@ To know if you are eligible to rent a car in Dubai, please ensure that your driv
 If your driving license is from the following countries, you are lucky, as it is valid in the UAE.\n
 If your country is not listed, please make sure to have a valid International Driving Permit (IDP).\n
 
-Rotana Star has a great solution for those who want to rent a car but don’t have a driver’s license. Our professional drivers will ensure that the driving experience is memorable and safe no matter what car you rent. So you can relax and enjoy the views while cruising around the city.`,
+Arab Star has a great solution for those who want to rent a car but don’t have a driver’s license. Our professional drivers will ensure that the driving experience is memorable and safe no matter what car you rent. So you can relax and enjoy the views while cruising around the city.`,
   },
   {
     heading: "Additional Costs",
     lineBreak: true,
     id: 3,
     title: "WHAT IS EXCLUDED FROM THE CAR RENTAL PRICE?",
-    content: `Some things are excluded from the car rental price, for example, a deposit that is blocked by Rotana Star and is refundable after the car is returned and all fines paid.\n
+    content: `Some things are excluded from the car rental price, for example, a deposit that is blocked by Arab Star and is refundable after the car is returned and all fines paid.\n
 
 Also, fuel, car parking, and Salik (road tolls) are not included in the price.`,
   },
@@ -72,13 +73,13 @@ Also, fuel, car parking, and Salik (road tolls) are not included in the price.`,
     lineBreak: false,
     id: 5,
     title: "IS IT CHEAPER TO RENT OR BUY A CAR?",
-    content: `Not only visitors but also residents prefer to rent a car rather than buy it. Renting saves you bucks as we cover maintenance expenditures. Also, if you want to try different models or car types, you can easily do it with Rotana Star. Fast, easy, and hustle-free.`,
+    content: `Not only visitors but also residents prefer to rent a car rather than buy it. Renting saves you bucks as we cover maintenance expenditures. Also, if you want to try different models or car types, you can easily do it with Arab Star. Fast, easy, and hustle-free.`,
   },
   {
     lineBreak: false,
     id: 6,
     title: "WHAT IS SALIK AND HOW DOES IT WORK?",
-    content: `Salik is Dubai’s road electronic free flow toll system that works without toll booths and allows drivers smooth and continuous driving. Every car has a red sticker on the windshield, so a fee of AED 5 will be deducted from the prepaid toll account whenever you pass through Salik. In Rotana Star, all the records are done through the RTA Salik system and are billed when the car is returned.\n
+    content: `Salik is Dubai’s road electronic free flow toll system that works without toll booths and allows drivers smooth and continuous driving. Every car has a red sticker on the windshield, so a fee of AED 5 will be deducted from the prepaid toll account whenever you pass through Salik. In Arab Star, all the records are done through the RTA Salik system and are billed when the car is returned.\n
 
 Interesting to know that even if you use a taxi, you also pay Salik charges at the end of the trip.`,
   },
@@ -99,13 +100,13 @@ A fine will be issued to the driver in case of a traffic violation. To avoid it,
     title: "WHAT FEATURES DO RENTAL CARS INCLUDE?",
     content: `In the UAE, all rental cars come with an AC and radio, while the newer models also have a USB music player or mobile charging port, making the driving experience even more convenient. Of course, every car model is different and has its own features and specifications, like a touch screen or a push-button ignition. So, before renting a car, make sure that the chosen car has everything you have been looking for.
 
-In case you need a GPS, baby or child seat, and WIFI, they are available in Rotana Star on request at an additional price.`,
+In case you need a GPS, baby or child seat, and WIFI, they are available in Arab Star on request at an additional price.`,
   },
   {
     lineBreak: false,
     id: 9,
     title: "DO YOU PROVIDE A CAR DELIVERY SERVICE?",
-    content: `Yes. At Rotana Star, we are happy to spare you from the hustle of coming to pick up or drop off your car, so no matter where, airport, hotel, or house, your car will be delivered to your doorstep free of charge.`,
+    content: `Yes. At Arab Star, we are happy to spare you from the hustle of coming to pick up or drop off your car, so no matter where, airport, hotel, or house, your car will be delivered to your doorstep free of charge.`,
   },
   {
     heading: "Insurance",
@@ -131,15 +132,15 @@ It is done so that in case of a car accident if the driver’s details were not 
   {
     lineBreak: true,
     id: 13,
-    heading: "Why Rotana Star ?",
-    title: "WHY SHOULD I CHOOSE ROTANA STAR RENT A CAR?",
-    content: `There are more than 500 car rental companies in the UAE, and quite often, they do not deliver what they promise. Unlike others, Rotana Star is the company where customer satisfaction is our main priority.
+    heading: "Why Arab Star ?",
+    title: "WHY SHOULD I CHOOSE ARAB STAR RENT A CAR?",
+    content: `There are more than 500 car rental companies in the UAE, and quite often, they do not deliver what they promise. Unlike others, Arab Star is the company where customer satisfaction is our main priority.
 
 With a huge fleet of fully checked and fully vetted cars, we give a chance to make every customer’s dream come true. With the best prices on the market, we will help you live your dream. We have a wide range of vehicles for all budgets, so you can choose the car that will be delivered to your doorstep. No hustle, no pitfalls, or hidden prices.
 
 Our car rental service is the most trusted on the market, that is why we earned our reputation as the best luxury car rental company in Dubai.
 
-Don’t waste your time looking anywhere else; call Rotana Star or check our websites for the best deals.`,
+Don’t waste your time looking anywhere else; call Arab Star or check our websites for the best deals.`,
   },
 ];
 export const articles = [

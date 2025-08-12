@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useNavigate } from "react-router-dom";
-import { URL } from "../data";
-import { CAR_CATEGORY_QUERY, CAR_LIST_QUERY } from "../utils/carUtils";
+import { CAR_CATEGORY_QUERY } from "../utils/carUtils";
 import { useLazyCarsQuery } from "../services/carApi";
 
 const SearchResultItem = ({ imgUrl, title, description, onClick }) => {
@@ -88,7 +87,7 @@ const SearchbarWithCategories = () => {
   // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+      if (searchRef.current && !searchRef.current?.contains(event.target)) {
         setIsSearchOpen(false);
       }
     };
@@ -110,7 +109,7 @@ const SearchbarWithCategories = () => {
         ref={searchRef}
       >
         <input
-          className="w-full outline-0"
+          className="w-full outline-0 placeholder-primary text-gray-800"
           placeholder="Search cars..."
           value={searchQuery}
           onChange={handleInputChange}
@@ -138,7 +137,7 @@ const SearchbarWithCategories = () => {
                   key={car?.id}
                   imgUrl={
                     car && car?.images && car?.images.length > 0
-                      ? URL + car.images?.[0]?.url
+                      ? car.images?.[0]?.url
                       : ""
                   }
                   title={car?.name}
@@ -169,10 +168,10 @@ const SearchbarWithCategories = () => {
                   ? "col-span-2 w-1/2 mx-auto md:col-span-1 md:w-full"
                   : ""
               }`}
-            onClick={() => navigate(`/category/${type.slug}`)}
+            onClick={() => navigate(`/cartype/${type.slug}`)}
           >
             <img
-              src={URL + type?.image?.url}
+              src={type?.image?.url}
               alt={type.cartype}
               className="w-10 h-10 object-contain mb-1"
               loading="lazy"

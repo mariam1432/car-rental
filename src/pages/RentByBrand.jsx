@@ -1,193 +1,177 @@
-import React from "react";
-import { CarCard, Layout } from "../components";
+import React, { useState } from "react";
+import { CarCard, Layout, Loader, Pagination } from "../components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCarsQuery } from "../services/carApi";
 import { useBrandsQuery } from "../services/brandApi";
 import { CAR_LIST_QUERY } from "../utils/carUtils";
 import { URL } from "../data";
+
 const RentByBrand = () => {
   const navigate = useNavigate();
+  const [selectedPage, setSelectedPage] = useState(1);
   const params = useParams();
-  const { data: bData } = useBrandsQuery({
+
+  const { data: bData, isLoading: isLoadingBrands } = useBrandsQuery({
     filters: {
       slug: { $eq: params?.brand },
     },
   });
-  const { data: carsData } = useCarsQuery({
+
+  const { data: carsData, isLoading: isLoadingCars } = useCarsQuery({
     ...CAR_LIST_QUERY,
     filters: {
       brand: { slug: { $eq: params?.brand } },
     },
+    pagination: {
+      page: selectedPage,
+      pageSize: 15,
+    },
   });
-  const brandData =
-    bData && bData?.data && bData?.data.length > 0 ? bData?.data[0] : {};
-  console.log(brandData);
-  const carList = carsData?.data ? carsData?.data : [];
+
+  const brandData = bData?.data?.[0] || {};
+  const carList = carsData?.data || [];
+  const pagination = carsData?.meta?.pagination || {};
+  const brandName = brandData?.car_Brand || "Luxury Car";
+
+  const handlePageChange = (page) => {
+    setSelectedPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Layout>
-      <div className="pt-[50px] flex flex-col items-center ">
-        <div className="flex flex-wrap gap-4 justify-center mb-10">
-          {carList.map((carItem, index) => (
-            <CarCard
-              link={`${window.location.origin}/car/${carItem.slug}`}
-              onHandleAction={() => navigate(`/car/${carItem.slug}`)}
-              className={
-                "w-[80vw] " + // Mobile: full-width scroll
-                "md:w-[calc(50%-20px)] " + // Tablet: 2 cards per row
-                "lg:w-[calc(25%-20px)] " + // Desktop: 4 cards (when not scrolling)
-                "xl:w-[300px]" // Force desktop horizontal scroll
-              }
-              index={index}
-              price={carItem.pricePerDay}
-              imgUrl={
-                `${URL}` +
-                `${
-                  carItem?.images && carItem.images.length > 0
-                    ? carItem.images[0].url
-                    : ""
-                }`
-              }
-              logo={
-                `${URL}` +
-                `${carItem?.brand.logo.url ? carItem?.brand.logo.url : ""}`
-              }
-              title={carItem.name}
-            />
-          ))}
-        </div>
-        <button className="text-white bg-primary rounded font-bold px-6 py-2">
-          View More
-        </button>
-        <div
-          className="w-full h-[50vh] p-10 gap-2 flex flex-col items-center justify-center mt-10 bg-no-repeat bg-center"
-          style={{
-            backdropFilter: `drop-shadow(8px 8px 10px green)`,
+      {(isLoadingBrands || isLoadingCars) && <Loader />}
 
-            backgroundSize: "cover",
-            backgroundImage: `url("https://imagecdnsa.zigwheels.ae/large/gallery/exterior/20/214/lamborghini-aventador-front-angle-low-view-689455.jpg")`,
-          }}
-        >
-          <h1 className="text-white text-3xl font-bold">
-            Rent A {brandData?.car_Brand} | Free Delivery
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+        {/* Car Listings Section */}
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 capitalize">
+            Available {brandName} Models
           </h1>
-          <p className="text-white text-lg md:text-sm">
-            Rent A {brandData?.car_Brand} at best prices & with free delivery
-            option.
-            <br />
-            Our fleet of Lamborghini rental Dubai has Huracan, STO, Aventador,
-            <brr />
-            EVO, Urus & more. Book today!
-          </p>
+
+          {carList.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
+                {carList.map((carItem) => (
+                  <CarCard
+                    key={carItem.id}
+                    link={`/car/${carItem.slug}`}
+                    onHandleAction={() => navigate(`/car/${carItem.slug}`)}
+                    price={carItem.pricePerDay}
+                    imgUrl={
+                      carItem?.images?.[0]?.url
+                        ? `${carItem.images[0].url}`
+                        : ""
+                    }
+                    logo={
+                      carItem?.brand?.logo?.url
+                        ? `${carItem.brand.logo.url}`
+                        : ""
+                    }
+                    title={carItem.name}
+                    className="w-full"
+                  />
+                ))}
+              </div>
+
+              {pagination.pageCount > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination
+                    noOfPages={pagination.pageCount}
+                    selectedPage={selectedPage}
+                    handleSelectedPage={handlePageChange}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            !isLoadingCars && (
+              <div className="text-center py-12">
+                <p className="text-lg text-gray-600">
+                  No {brandName} cars available at the moment.
+                </p>
+              </div>
+            )
+          )}
         </div>
-        <div className="flex px-2 flex-col gap-2 pt-20 text-base">
-          <h2 className="text-lg font-bold">
-            Why Lamborghini For Rent in Dubai?
+
+        {/* Promotional Banner */}
+        <div className="relative w-full h-64 md:h-96 my-12 rounded-lg overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                'url("https://imagecdnsa.zigwheels.ae/large/gallery/exterior/20/214/lamborghini-aventador-front-angle-low-view-689455.jpg")',
+            }}
+          />
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+          >
+            <h2 className="text-white text-2xl md:text-4xl font-bold mb-4">
+              Rent A {brandName} | Free Delivery
+            </h2>
+            <p className="text-white text-lg max-w-2xl">
+              Rent a {brandName} at the best prices with free delivery option.
+              Our fleet includes various models to choose from. Book today!
+            </p>
+          </div>
+        </div>
+
+        {/* Brand Information Section */}
+        <div className="max-w-4xl mx-auto px-4 py-8 bg-white rounded-lg shadow-sm">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Why Rent {brandName} in Dubai?
           </h2>
-          <p>
-            Rotana Star’s Lamborghini rental in Dubai service offers best prices
-            for all Lamborghini cars. You can book Lamborghini car for a short
-            or long stay in Dubai. We’ve got the best deals on the car of your
-            dreams, whether you’re visiting or living in Dubai. We have
-            competitive rates for all Lamborghini cars in Dubai for rental
-            service.
-          </p>
-          <p>
-            A real car-lover can’t resist this masterpiece. We have a great
-            collection of Lamborghinis for rent in Dubai, UAE. Get your supercar
-            delivered free of charge to your location, and enjoy your stay in
-            Dubai with style and comfort.
-          </p>
-          <p>
-            Rent and drive your favorite Lamborghini car anywhere in the UAE
-            with Rotana Star in just a few clicks. Navigate to the adventure of
-            a lifetime driving in a Lamborghini.
-          </p>
-          <h1 className="text-xl font-bold text-gray-800">
-            Why should i Choose Lamborghini for Rent in Dubai?
-          </h1>
-          <p>
-            Renting a Lamborghini in Dubai is a dream come true for many car
-            enthusiasts. Rotana Star is dedicated to making this dream a reality
-            by offering convenient Lamborghini rental services. With its
-            exceptional speed, luxurious design, and captivating appearance,
-            Lamborghini stands out in the market of elite cars. Since its
-            inception, Lamborghini has been focused on producing
-            high-performance supercars to surpass its Italian rivals. Over the
-            past 50 years, the brand has solidified its position as one of the
-            most coveted supercar manufacturers in the world, thanks to
-            cutting-edge models like the Aventador and Huracan. A Lamborghini is
-            the perfect vehicle for those seeking a memorable and luxurious
-            driving experience in Dubai. It leaves a lasting impression and
-            stands out from the competition. Whether you’re traveling for
-            business or visiting for a short vacation, renting a Lamborghini
-            allows you to live the high life and explore the city in style.
-            Rotana Star offers a wide selection of Lamborghini rental cars from
-            trusted car rental in Dubai. As a leading platform for renting
-            supercars, we compile the top Lamborghini models available for hire
-            from reliable partners across the Emirate. By browsing our verified
-            listings, comparing car features, and instantly booking a car on a
-            daily rental basis, you can easily find the perfect Lamborghini for
-            your needs. Our partnerships with top UAE rental enable us to offer
-            competitive Lamborghini rental rates.
-          </p>
-          <h1 className="text-xl font-bold text-gray-800">
-            What to Expect if I Rent Lamborghini with Rotana Star in Dubai?
-          </h1>
-          <p>
-            When you rent a Lamborghini in Dubai through Rotana Star, you can
-            expect the best possible prices since you deal directly with local
-            car rental. We charge zero commission or booking fees, ensuring a
-            transparent and cost-effective rental process. Our mission is to
-            provide top-notch Lamborghini rental services with a strong focus on
-            safety. Additionally, we offer flexible rental options, including
-            daily and weekly rates, to accommodate your preferences.
-          </p>
-          <p>
-            Renting a Lamborghini in Dubai allows you to experience a host of
-            high-end features and amenities. You can control various aspects of
-            the car, such as safety technology, infotainment systems, climate
-            control, driving modes, premium sound speakers, and LCD monitors,
-            using the intuitive controls on the dashboard. These features
-            enhance your overall driving experience and add to the allure of
-            driving a Lamborghini. Rotana Star provides an opportunity to rent a
-            Lamborghini in Dubai and be the center of attention while driving
-            one of the most prestigious supercars in the world.
-          </p>
-          <p>
-            It’s a chance to discover the thrill and exclusivity that not many
-            people get to experience. With our simple booking process, you can
-            reserve a Lamborghini and indulge in a unique luxury drive in this
-            vibrant city. It’s important to note that to rent a vehicle from the
-            ‘Supercars’ category, such as a Lamborghini, you must be at least 23
-            years old or above.
-          </p>
-          <p>
-            Lamborghini offers a range of unique car models, and Rotana Star
-            allows you to choose from this wide variety at no additional cost.
-            Whether you prefer the Lamborghini Huracan, Lamborghini Evo ,
-            Lamborghini Urus, or Lamborghini Aventador, you can select your
-            favorite model and rent it at the best market rates. These models
-            are highly popular and frequently rented for self-drive purposes in
-            Dubai.
-          </p>
-          <p>
-            If you’re wondering where to hire a Lamborghini from, Rotana Star is
-            the UAE-based company that offers luxury rental cars in Dubai. Our
-            platform provides access to Lamborghini Huracan with different
-            colors which allows you to enjoy not only the speed, driving
-            experience, and stylish appearance but also the beautiful night sky.
-            The Lamborghini Aventador, known for its luxury, is another
-            excellent option for those seeking a memorable driving exprience in
-            Dubai.
-          </p>
-          <p>
-            At Rotana Star, we offer the best rental packages for any
-            Lamborghini model you choose. Our attractive daily rates start from
-            AED 2500, and we update our offers daily to provide you with the
-            most competitive prices. For more details about Lamborghini car
-            rentals in Dubai, visit Rotana Star. Don’t miss out on the
-            opportunity to drive a Lamborghini on your next trip to Dubai.
-          </p>
+
+          <div className="space-y-6 text-gray-700">
+            <p>
+              Arab Star's {brandName} rental service in Dubai offers the best
+              prices for all models. Whether you're visiting or living in Dubai,
+              we've got the best deals on the car of your dreams. We have
+              competitive rates for all {brandName} cars available for rental
+              service.
+            </p>
+
+            <p>
+              A real car-lover can't resist this masterpiece. We have a great
+              collection of {brandName} models for rent in Dubai, UAE. Get your
+              supercar delivered free of charge to your location, and enjoy your
+              stay in Dubai with style and comfort.
+            </p>
+
+            <h3 className="text-xl font-bold text-gray-800 mt-8">
+              What to Expect When Renting {brandName} with Arab Star?
+            </h3>
+
+            <p>
+              When you rent a {brandName} through Arab Star, you can expect the
+              best possible prices with transparent and cost-effective rental
+              process. Our mission is to provide top-notch rental services with
+              a strong focus on safety. We offer flexible rental options
+              including daily and weekly rates.
+            </p>
+
+            <h3 className="text-xl font-bold text-gray-800 mt-8">
+              Rental Requirements
+            </h3>
+
+            <p>
+              To rent a vehicle from the 'Supercars' category like {brandName},
+              you must be at least 23 years old. We offer a range of unique car
+              models at competitive market rates. These models are highly
+              popular and frequently rented for self-drive purposes in Dubai.
+            </p>
+
+            <h3 className="text-xl font-bold text-gray-800 mt-8">Our Offers</h3>
+
+            <p>
+              At Arab Star, we offer the best rental packages starting from AED
+              2500. We update our offers daily to provide you with the most
+              competitive prices. Don't miss out on the opportunity to drive a
+              {brandName} on your next trip to Dubai.
+            </p>
+          </div>
         </div>
       </div>
     </Layout>

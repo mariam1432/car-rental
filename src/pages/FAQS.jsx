@@ -23,7 +23,7 @@ const FAQS = () => {
         <div className="flex flex-col md:flex-row justify-between p-10 gap-0 md:gap-10">
           <div className="w-full md:w-[70%]">
             <p>
-              In Rotana Star Rent a Car, we receive a lot of questions about
+              In Arab Star Rent a Car, we receive a lot of questions about
               renting a car in Dubai and the UAE. We gathered the most popular
               ones to make the car rental process smooth and stress-free.
             </p>
@@ -64,7 +64,7 @@ const FAQS = () => {
                 description={article.description}
                 date={article.date}
                 noOfComments={article.noOfComments}
-                handleClick={() => console.log("clicked")}
+                handleClick={() => console.log("")}
               />
             ))}
           </div>

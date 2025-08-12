@@ -23,15 +23,15 @@ const Footer = () => {
         </ul>
 
         <ul className="text-sm text-gray-800 text-start w-full md:w-fit md:text-right border-t-2 border-gray-400 border-dotted py-4">
-          <li>+971504947393</li>
+          <li>+97152314716</li>
           <li>info@rotanastar.ae</li>
           <li>Saratoga Building - Al Barsha - Al Barsha 1 - Dubai, UAE</li>
         </ul>
       </div>
       <div className="border-t-2 border-gray-400 border-dotted py-4">
         <span className="text-xs text-gray-800">
-          Ⓒ 2024 - All Rights Are Reserved - Copyright Luxury Car Rental in
-          Dubai Rotana Star - Privacy Policy
+          Ⓒ 2025 - All Rights Are Reserved - Copyright Luxury Car Rental in
+          Dubai Arab Star - Privacy Policy
         </span>
       </div>
     </footer>
