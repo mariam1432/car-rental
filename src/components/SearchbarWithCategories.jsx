@@ -173,7 +173,7 @@ const SearchbarWithCategories = () => {
             <img
               src={type?.image?.url}
               alt={type.cartype}
-              className="w-10 h-10 object-contain mb-1"
+              className="w-15 h-15 object-contain mb-1"
               loading="lazy"
             />
             <span className="text-white text-sm text-center">

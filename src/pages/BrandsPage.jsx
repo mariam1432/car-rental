@@ -32,9 +32,8 @@ const BrandsPage = () => {
                   <CarBrandCard
                     onClick={() => navigate(`/rent/${brand?.slug}`)}
                     title={brand.car_Brand}
-                    imgUrl={URL + brand?.logo?.url}
+                    imgUrl={brand?.logo?.url}
                     itemsCenter
-                    className={"flex items-center justify-center"}
                   />
                 </div>
               ))}

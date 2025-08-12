@@ -10,7 +10,6 @@ import {
 import { useBrandsQuery } from "../services/brandApi";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useLazyCarsQuery } from "../services/carApi";
-import { URL } from "../data";
 import { useNavigate } from "react-router-dom";
 import { CAR_LIST_QUERY } from "../utils/carUtils";
 
@@ -47,7 +46,6 @@ const HomePage = () => {
 
   // Memoized derived data
   const categoryList = useMemo(() => categoryData?.data || [], [categoryData]);
-
   const brandList = useMemo(() => brandsData?.data || [], [brandsData]);
 
   // Fetch cars for each subcategory
@@ -80,7 +78,6 @@ const HomePage = () => {
           setCarsByCategories(carsData);
         } catch (error) {
           console.error("Failed to fetch cars:", error);
-          // Consider setting error state here
         } finally {
           setIsLoadingCars(false);
         }
@@ -103,30 +100,9 @@ const HomePage = () => {
 
   const renderBrandCards = () => (
     <div className="w-full">
-      {/* Mobile view */}
-      <div className="grid grid-cols-2 gap-2 w-full md:hidden">
-        {brandList.map((brand, index) => (
-          <div
-            key={`mobile-${brand.id}`}
-            className={
-              index === brandList.length - 1 && brandList.length % 2 !== 0
-                ? "col-span-2"
-                : ""
-            }
-          >
-            <CarBrandCard
-              onClick={() => navigate(`/rent/${brand.slug}`)}
-              title={brand.car_Brand}
-              imgUrl={brand?.logo?.url ? `${brand.logo.url}` : ""}
-              altText={`${brand.car_Brand} logo`}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop view */}
-      <div className="hidden md:block w-full overflow-x-auto no-scrollbar py-2">
-        <div className="inline-flex space-x-4 min-w-max w-full">
+      {/* Desktop and above 500px: horizontal scroll */}
+      <div className="hidden md:block w-full overflow-x-auto no-scrollbar py-2 px-4">
+        <div className="inline-flex space-x-4 min-w-max w-full px-2">
           {brandList.map((brand) => (
             <CarBrandCard
               onClick={() => navigate(`/rent/${brand.slug}`)}
@@ -134,14 +110,49 @@ const HomePage = () => {
               className="flex-shrink-0"
               title={brand.car_Brand}
               imgUrl={brand?.logo?.url ? `${brand.logo.url}` : ""}
-              altText={`${brand.car_Brand} logo`}
             />
           ))}
         </div>
       </div>
 
+      {/* Medium devices: 2 per row grid, last odd card full width */}
+      <div className="hidden sm:grid grid-cols-2 gap-3 px-2 max-w-screen-sm md:hidden">
+        {brandList.map((brand, index) => {
+          // if last item and odd count, span full width
+          const isLastOdd =
+            brandList.length % 2 !== 0 && index === brandList.length - 1;
+          return (
+            <div
+              key={`medium-${brand.id}`}
+              className={isLastOdd ? "col-span-2" : ""}
+            >
+              <CarBrandCard
+                onClick={() => navigate(`/rent/${brand.slug}`)}
+                title={brand.car_Brand}
+                imgUrl={brand?.logo?.url ? `${brand.logo.url}` : ""}
+                className="w-full h-full"
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Small devices <480px: 1 per row */}
+      <div className="sm:hidden flex flex-col gap-3 px-2">
+        {brandList.map((brand) => (
+          <div key={`small-${brand.id}`} className="w-full">
+            <CarBrandCard
+              onClick={() => navigate(`/rent/${brand.slug}`)}
+              title={brand.car_Brand}
+              imgUrl={brand?.logo?.url ? `${brand.logo.url}` : ""}
+              className="w-full h-full"
+            />
+          </div>
+        ))}
+      </div>
+
       <Button
-        className="mt-5 block md:hidden"
+        className="mt-5 mx-auto block md:hidden w-full max-w-[200px]"
         onClick={() => navigate("/car-rental-brands")}
         aria-label="View all brands"
       >
@@ -159,7 +170,7 @@ const HomePage = () => {
         return (
           <section
             key={key}
-            className="flex flex-col items-center justify-center py-6 gap-4 w-full px-4 md:px-8"
+            className="flex flex-col items-center justify-center py-6 gap-4 w-full px-4 md:px-8 max-w-screen-xl mx-auto"
             aria-labelledby={`${key}-heading`}
           >
             <h2
@@ -168,11 +179,11 @@ const HomePage = () => {
             >
               {value.cat} FOR RENT IN DUBAI
             </h2>
-            <p className="text-xs md:text-sm text-gray-500 text-center">
+            <p className="text-xs md:text-sm text-gray-500 text-center max-w-2xl px-4">
               Browse our wide catalog of {value.cat} for rent by category
             </p>
 
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {value.cars.map((carItem) => (
                 <CarCard
                   key={carItem.id}
@@ -211,9 +222,9 @@ const HomePage = () => {
     <Layout isHome>
       {(isLoadingCars || isLoadingCategory) && <Loader />}
 
-      <div className="bg-white">
-        <div className="mb-10 px-6 gap-2 flex flex-col items-center justify-center">
-          <p className="text-xs text-gray-500">
+      <div className="bg-white overflow-x-hidden">
+        <div className="mb-10 px-4 sm:px-6 gap-4 flex flex-col items-center justify-center max-w-screen-xl mx-auto">
+          <p className="text-xs text-gray-500 text-center px-4">
             Arab Star luxury car rental in Dubai offers a fair and competitive
             pricing service. Our luxury car fleet in Dubai includes all brands
             with FREE delivery. Choose your luxury car from our fleet, including
@@ -223,7 +234,7 @@ const HomePage = () => {
             costs.
           </p>
 
-          <div className="flex w-full flex-wrap items-center justify-center md:justify-between gap-4 text-center md:text-left">
+          <div className="flex w-full flex-wrap items-center justify-center md:justify-between gap-4 text-center md:text-left px-2">
             <h1 className="text-lg md:text-2xl font-bold">
               SELECT A CAR FOR RENT BY BRAND
             </h1>

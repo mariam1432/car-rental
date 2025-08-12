@@ -148,21 +148,22 @@ const CarTypePage = () => {
   const renderBrandLogos = () => (
     <div className="w-full mb-8">
       <h2 className="text-lg font-bold text-center mb-4">Available Brands</h2>
-      <div className="flex overflow-x-auto no-scrollbar py-2">
-        <div className="inline-flex space-x-4 justify-center w-full">
+
+      <div className="overflow-x-auto no-scrollbar py-2 px-4">
+        <div className="inline-flex space-x-4 flex-nowrap">
           {brandList.map((brandItem) => (
             <button
               key={brandItem.id}
               onClick={() => navigate(`/rent/${brandItem.slug}`)}
-              className="cursor-pointer rounded-lg border-1 flex items-center justify-center px-6 py-3 border-primary hover:bg-gray-100 transition-colors"
+              className="cursor-pointer rounded-lg border border-primary flex items-center justify-center px-5 py-3 hover:bg-gray-100 transition-colors min-w-[80px]"
               aria-label={`View ${brandItem.car_Brand} cars`}
             >
               {brandItem?.logo?.url ? (
                 <img
                   src={`${brandItem.logo.url}`}
-                  className="w-[40px] h-[40px] object-contain"
                   alt={brandItem.car_Brand}
                   loading="lazy"
+                  className="w-14 h-14 object-contain"
                 />
               ) : (
                 <span className="text-sm">{brandItem.car_Brand}</span>

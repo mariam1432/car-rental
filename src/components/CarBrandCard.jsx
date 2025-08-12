@@ -1,16 +1,46 @@
 import React from "react";
 
-const CarBrandCard = ({ imgUrl, title, index, onClick, itemsCenter }) => {
+const CarBrandCard = ({ imgUrl, title, onClick, itemsCenter, className }) => {
   return (
     <div
       onClick={onClick}
-      key={index}
-      className={`min-w-[200px] bg-white w-auto shadow-xl flex items-center ${
-        itemsCenter ? "justify-center px-10 py-5 " : "justify-start px-5 py-3 "
-      } gap-1 rounded-2xl border-1 border-gray-200 cursor-pointer `}
+      className={`bg-white shadow-md rounded-2xl border border-gray-200 cursor-pointer p-4
+        ${
+          itemsCenter
+            ? "flex justify-center text-center lg:justify-start lg:text-left"
+            : "flex justify-start text-left"
+        }
+        items-center
+        ${className || ""}
+      `}
+      style={{
+        minWidth: "auto",
+        flex: "1 1 auto",
+      }}
     >
-      <img src={imgUrl} alt={title} className="w-7 h-7" />
-      <span className="text-xs">{title}</span>
+      {/* Wrap img + text together in flex box */}
+      <div
+        className={`flex items-center gap-3 ${
+          itemsCenter ? "justify-center" : ""
+        }`}
+      >
+        {imgUrl && (
+          <img
+            src={imgUrl}
+            alt={title}
+            className={`${itemsCenter ? "mx-auto lg:mx-0" : ""} object-contain`}
+            style={{
+              width: "48px",
+              height: "48px",
+              flexShrink: 0,
+            }}
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+        )}
+        <span className="text-base font-medium truncate">{title}</span>
+      </div>
     </div>
   );
 };

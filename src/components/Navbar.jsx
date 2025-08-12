@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useBrandsQuery } from "../services/brandApi";
 import { CAR_CATEGORY_QUERY } from "../utils/carUtils";
-
+import logo from "../assets/logo.png";
 const Navbar = ({ isHomePage }) => {
   const currentPath = window.location.pathname;
   const navigate = useNavigate();
@@ -390,8 +390,8 @@ const Navbar = ({ isHomePage }) => {
             onClick={() => navigate("/")}
           >
             <img
-              src={"../../logo.png"}
-              alt="rotanastar"
+              src={logo}
+              alt="logo arabstar"
               className="w-30 h-auto min-h-10"
             />
           </div>
