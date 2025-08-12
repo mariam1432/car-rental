@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCategoriesQuery } from "../services/carCategoryApi";
 import { useBrandsQuery } from "../services/brandApi";
 import { CAR_CATEGORY_QUERY } from "../utils/carUtils";
 import logo from "../assets/logo.png";
+
 const Navbar = ({ isHomePage }) => {
   const currentPath = window.location.pathname;
   const navigate = useNavigate();
@@ -45,6 +46,24 @@ const Navbar = ({ isHomePage }) => {
     []
   );
 
+  // Helper to handle SPA navigation and preserve right-click/new tab etc.
+  const handleLinkClick = (e, href) => {
+    if (
+      e.defaultPrevented ||
+      e.button !== 0 || // only left click
+      e.metaKey ||
+      e.altKey ||
+      e.ctrlKey ||
+      e.shiftKey
+    ) {
+      return; // allow default browser behavior for special clicks
+    }
+    e.preventDefault();
+    closeAllDropdowns();
+    setIsOpen(false);
+    navigate(href);
+  };
+
   // Reusable components
   const ChevronIcon = ({ isOpen }) => (
     <svg
@@ -79,7 +98,13 @@ const Navbar = ({ isHomePage }) => {
           className={`${
             selected ? "text-primary" : "text-gray-900"
           } px-3 py-2 text-xs md:text-sm whitespace-nowrap hover:text-primary`}
-          onClick={closeAllDropdowns}
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+            } else {
+              closeAllDropdowns();
+            }
+          }}
         >
           {label}
         </a>
@@ -128,10 +153,7 @@ const Navbar = ({ isHomePage }) => {
           className={`block px-3 py-2 text-xs md:text-sm text-gray-900 hover:bg-primary ${
             selected ? "bg-primary" : ""
           }`}
-          onClick={() => {
-            closeAllDropdowns();
-            setIsOpen(false);
-          }}
+          onClick={(e) => handleLinkClick(e, href)}
         >
           {label}
         </a>
@@ -172,7 +194,12 @@ const Navbar = ({ isHomePage }) => {
                   <a
                     href={`/cartype/${type.slug}`}
                     className="block px-4 py-2 text-sm md:text-xs whitespace-nowrap text-gray-700 hover:bg-primary"
-                    onClick={closeAllDropdowns}
+                    onClick={(e) => {
+                      closeAllDropdowns();
+                      if (isMobile) {
+                        handleLinkClick(e, `/cartype/${type.slug}`);
+                      }
+                    }}
                   >
                     {type.cartype}
                   </a>
@@ -187,18 +214,14 @@ const Navbar = ({ isHomePage }) => {
                     >
                       <ChevronIcon isOpen={isSubOpen} />
                     </button>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                   {isSubOpen &&
                     type?.car_subcategories &&
                     type?.car_subcategories.length > 0 && (
                       <DropdownMenu position="left-full">
                         {type.car_subcategories.map((category) => {
                           const modelDropdownKey = `${prefix}${type.cartype}-${category.categorySubType}`;
-                          const isModelOpen =
-                            openSubDropdown === modelDropdownKey;
-
+                          // const isModelOpen = openSubDropdown === modelDropdownKey; // unused
                           return (
                             <div
                               key={category.categorySubType}
@@ -207,7 +230,15 @@ const Navbar = ({ isHomePage }) => {
                               <a
                                 href={`/product-category/${type.slug}/${category.slug}`}
                                 className="block px-4 py-2 text-xs md:text-[11px] whitespace-nowrap text-gray-700 hover:bg-primary"
-                                onClick={closeAllDropdowns}
+                                onClick={(e) => {
+                                  closeAllDropdowns();
+                                  if (isMobile) {
+                                    handleLinkClick(
+                                      e,
+                                      `/product-category/${type.slug}/${category.slug}`
+                                    );
+                                  }
+                                }}
                               >
                                 {category.categorySubType}
                               </a>
@@ -246,7 +277,12 @@ const Navbar = ({ isHomePage }) => {
                 key={brand.car_Brand}
                 href={`/rent/${brand.slug}`}
                 className="block px-4 py-2 text-xs md:text-sm whitespace-nowrap text-gray-700 hover:bg-primary"
-                onClick={closeAllDropdowns}
+                onClick={(e) => {
+                  closeAllDropdowns();
+                  if (isMobile) {
+                    handleLinkClick(e, `/rent/${brand.slug}`);
+                  }
+                }}
               >
                 {brand.car_Brand}
               </a>
@@ -279,16 +315,11 @@ const Navbar = ({ isHomePage }) => {
                 <div key={type.cartype}>
                   <div className="flex justify-between items-center">
                     <a
-                      href={type.slug}
+                      href={`/cartype/${type.slug}`}
                       className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        closeAllDropdowns();
-                        setIsOpen(false);
-                        setTimeout(() => {
-                          window.location.href = type.slug;
-                        }, 300);
-                      }}
+                      onClick={(e) =>
+                        handleLinkClick(e, `/cartype/${type.slug}`)
+                      }
                     >
                       {type.cartype}
                     </a>
@@ -307,28 +338,24 @@ const Navbar = ({ isHomePage }) => {
                     type?.car_subcategories &&
                     type?.car_subcategories.length > 0 && (
                       <div className="pl-4">
-                        {type.car_subcategories.map((category) => {
-                          return (
-                            <div key={category.categorySubType}>
-                              <div className="flex justify-between items-center">
-                                <a
-                                  href={`/product-category/${type.slug}/${category.slug}`}
-                                  className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    closeAllDropdowns();
-                                    setIsOpen(false);
-                                    setTimeout(() => {
-                                      window.location.href = category.slug;
-                                    }, 300);
-                                  }}
-                                >
-                                  {category.categorySubType}
-                                </a>
-                              </div>
+                        {type.car_subcategories.map((category) => (
+                          <div key={category.categorySubType}>
+                            <div className="flex justify-between items-center">
+                              <a
+                                href={`/product-category/${type.slug}/${category.slug}`}
+                                className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
+                                onClick={(e) =>
+                                  handleLinkClick(
+                                    e,
+                                    `/product-category/${type.slug}/${category.slug}`
+                                  )
+                                }
+                              >
+                                {category.categorySubType}
+                              </a>
                             </div>
-                          );
-                        })}
+                          </div>
+                        ))}
                       </div>
                     )}
                 </div>
@@ -359,10 +386,7 @@ const Navbar = ({ isHomePage }) => {
                 key={brand.car_Brand}
                 href={`/rent/${brand.slug}`}
                 className="block px-3 py-2 text-sm md:text-base text-gray-900 hover:bg-primary"
-                onClick={() => {
-                  closeAllDropdowns();
-                  setIsOpen(false);
-                }}
+                onClick={(e) => handleLinkClick(e, `/rent/${brand.slug}`)}
               >
                 {brand.car_Brand}
               </a>
