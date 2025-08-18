@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Layout, ZigzagUnderline } from "../components";
 import contactusImg from "../assets/contactusImg.jpg";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-// import { SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY } from "../utils/emailUtils";
 import "leaflet/dist/leaflet.css";
 import emailjs from "@emailjs/browser";
 
@@ -217,13 +216,13 @@ const Contactus = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <i className="fa-solid fa-mobile-screen-button text-green-500"></i>
-                <p>+971 52314716</p>
+                <p>+971523142716</p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-sm mt-2">
               <i className="fa-solid fa-map-location-dot text-green-500"></i>
               <p className="text-sm">
-                Sartoga Building - Al Barsha - Al Barsha 1 - Dubai, UAE
+                Arab Star Car Rentals, Street 16 A, Alqouz- Dubai, UAE
               </p>
             </div>
           </div>

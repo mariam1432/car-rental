@@ -23,9 +23,9 @@ const Footer = () => {
         </ul>
 
         <ul className="text-sm text-gray-800 text-start w-full md:w-fit md:text-right border-t-2 border-gray-400 border-dotted py-4">
-          <li>+97152314716</li>
-          <li>info@rotanastar.ae</li>
-          <li>Saratoga Building - Al Barsha - Al Barsha 1 - Dubai, UAE</li>
+          <li>+971523142716</li>
+          <li>info@arabstarcarrentals.com</li>
+          <li> Arab Star Car Rentals, Street 16 A, Alqouz- Dubai, UAE</li>
         </ul>
       </div>
       <div className="border-t-2 border-gray-400 border-dotted py-4">
